@@ -2,131 +2,95 @@
 
 import type { ReactElement } from 'react';
 
-import { useRef } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 
-import { motion, useReducedMotion, useScroll, useTransform } from 'motion/react';
+import { motion, useReducedMotion } from 'motion/react';
 
+import { BlockInvert } from '@/components/common/blur';
 import { Divider } from '@/components/common/divider';
-import { SectionLabel } from '@/components/common/section-label';
+import { gridColumns } from '@/components/common/grid';
+import { Label } from '@/components/common/label';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 
-import { createStaggerContainer, fadeUpVariants } from '@/lib/motion-variants';
+import { createStaggerContainer, fadeUpVariants } from '@/lib/motion';
 import { cn } from '@/lib/utils';
 
-import { HERO_NAME_PARTS, HERO_SECTION, HERO_STATS } from '@/data/static/hero';
-
-interface NameBlockInvertProps {
-  children: string;
-  shouldReduceMotion: boolean | null;
-}
-
-function NameBlockInvert({ children, shouldReduceMotion }: NameBlockInvertProps) {
-  return (
-    <motion.div
-      className="relative overflow-hidden cursor-default select-none bg-foreground/80 backdrop-blur-xl"
-      whileHover="hovered"
-      initial="idle"
-    >
-      <motion.div
-        className="absolute inset-0 bg-background/80 backdrop-blur-xl"
-        variants={
-          shouldReduceMotion
-            ? { idle: { opacity: 0 }, hovered: { opacity: 1 } }
-            : { idle: { x: '-100%' }, hovered: { x: '0%' } }
-        }
-        transition={shouldReduceMotion ? { duration: 0.15 } : { type: 'spring', stiffness: 400, damping: 30 }}
-      />
-
-      <span className="relative block mix-blend-difference font-semibold leading-none text-white p-2 text-[clamp(3rem,8vw,6rem)]">
-        {children}
-      </span>
-    </motion.div>
-  );
-}
+import { HERO, HERO_NAMES, HERO_STATS } from '@/data/static/hero';
 
 export function Hero(): ReactElement {
-  const ref = useRef<HTMLElement>(null);
   const shouldReduceMotion = useReducedMotion();
   const container = createStaggerContainer(0.08);
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ['start start', 'end start'],
-  });
-  const imageY = useTransform(scrollYProgress, [0, 1], [0, shouldReduceMotion ? 0 : 120]);
 
   return (
     <section
       id="hero"
-      ref={ref}
-      className="relative min-h-dvh w-full overflow-hidden"
+      className="relative min-h-dvh w-full"
     >
       <div
         className={cn(
           'relative z-10',
-          'grid min-h-dvh gap-6 px-6 pt-20 pb-6',
-          'grid-cols-2 content-center',
+          gridColumns,
+          'min-h-dvh content-center pt-20 pb-6',
           'sm:grid-cols-4',
-          'lg:grid-cols-12 lg:content-stretch lg:py-6',
+          'lg:content-stretch lg:py-6',
         )}
       >
-        {/* Portrait */}
         <div
           className={cn(
-            'col-span-2 flex flex-col gap-2',
+            'flex flex-col gap-2',
+            'col-span-2',
             'sm:col-span-4',
-            'lg:order-none lg:col-span-5 lg:self-stretch lg:min-h-0',
+            'lg:order-0 lg:col-span-5 lg:min-h-0 lg:self-stretch',
           )}
         >
-          <motion.div
-            className="relative aspect-square overflow-hidden bg-foreground lg:aspect-auto lg:flex-1 lg:min-h-0"
-            style={{ y: imageY }}
-          >
+          <div className="relative overflow-hidden aspect-square bg-foreground lg:aspect-auto lg:min-h-0 lg:flex-1">
             <Image
-              src={HERO_SECTION.image.src}
-              alt={HERO_SECTION.image.alt}
+              src={HERO.image.src}
+              alt={HERO.image.alt}
               fill
               className="object-cover"
               sizes="(max-width: 1024px) 100vw, 42vw"
               priority
             />
-          </motion.div>
+          </div>
           <Badge
             variant="secondary"
-            className="rounded-none self-start"
+            className="self-start rounded-none"
           >
-            {HERO_SECTION.image.badge}
+            {HERO.image.badge}
           </Badge>
         </div>
 
-        {/* Content */}
         <motion.div
           className={cn(
-            'order-2 col-span-2 flex flex-col gap-4 justify-center',
+            'order-2 flex flex-col justify-center gap-4',
+            'col-span-2',
             'sm:col-span-4',
-            'lg:order-none lg:col-start-7 lg:col-span-4 lg:gap-6',
+            'lg:order-0 lg:col-start-7 lg:col-span-4 lg:gap-6',
           )}
           variants={container}
           initial="hidden"
           animate="show"
         >
           <motion.div variants={fadeUpVariants}>
-            <SectionLabel
-              number={HERO_SECTION.number}
-              title={HERO_SECTION.title}
+            <Label
+              number={HERO.number}
+              title={HERO.title}
             />
           </motion.div>
 
           <div className="flex flex-col items-start pb-4">
-            {HERO_NAME_PARTS.map((name) => (
+            {HERO_NAMES.map((name) => (
               <motion.div
                 key={name}
                 variants={fadeUpVariants}
                 className="-mb-4"
               >
-                <NameBlockInvert shouldReduceMotion={shouldReduceMotion}>{name}</NameBlockInvert>
+                <BlockInvert>
+                  <span className="text-[clamp(3rem,8vw,6rem)]">{name}</span>
+                </BlockInvert>
               </motion.div>
             ))}
           </div>
@@ -135,7 +99,7 @@ export function Hero(): ReactElement {
             variants={fadeUpVariants}
             className="text-sm font-medium text-foreground sm:text-base"
           >
-            {HERO_SECTION.role}
+            {HERO.role}
           </motion.p>
 
           <motion.div variants={fadeUpVariants}>
@@ -144,7 +108,7 @@ export function Hero(): ReactElement {
 
           <motion.div
             variants={fadeUpVariants}
-            className="flex gap-6 items-start w-full"
+            className="flex w-full items-start gap-6"
           >
             {HERO_STATS.map(({ label, value }) => (
               <div
@@ -167,22 +131,21 @@ export function Hero(): ReactElement {
           </motion.div>
         </motion.div>
 
-        {/* Rotated sidebar text — bottom-right */}
         <motion.div
-          className={cn('hidden', 'lg:flex lg:col-start-12 lg:col-span-1 lg:items-end lg:justify-end lg:self-stretch')}
+          className={cn('hidden', 'lg:col-start-12 lg:col-span-1 lg:flex lg:items-end lg:justify-end lg:self-stretch')}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={shouldReduceMotion ? { duration: 0.15 } : { delay: 0.6, duration: 0.6 }}
         >
           <div className="flex items-end gap-0 pb-6">
             <div className="flex items-center justify-center">
-              <p className="[writing-mode:vertical-rl] text-3xl font-medium text-foreground whitespace-nowrap xl:text-4xl">
-                {HERO_SECTION.sidebar[0]}
+              <p className="text-3xl font-medium text-foreground [writing-mode:vertical-rl] whitespace-nowrap xl:text-4xl">
+                {HERO.sidebar[0]}
               </p>
             </div>
             <div className="flex items-center justify-center">
-              <p className="[writing-mode:vertical-rl] text-3xl font-medium text-foreground whitespace-nowrap xl:text-4xl">
-                {HERO_SECTION.sidebar[1]}
+              <p className="text-3xl font-medium text-foreground [writing-mode:vertical-rl] whitespace-nowrap xl:text-4xl">
+                {HERO.sidebar[1]}
               </p>
             </div>
           </div>

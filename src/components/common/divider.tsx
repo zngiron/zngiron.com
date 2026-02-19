@@ -7,5 +7,5 @@ interface DividerProps {
 }
 
 export function Divider({ className }: DividerProps): ReactElement {
-  return <div className={cn('bg-border h-px w-full', className)} />;
+  return <div className={cn('h-px w-full bg-border', className)} />;
 }

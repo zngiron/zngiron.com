@@ -1,4 +1,4 @@
-export const CONTACT_SECTION = {
+export const CONTACT = {
   number: '005',
   title: 'Contact',
 } as const;

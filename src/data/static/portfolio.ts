@@ -15,7 +15,7 @@ export interface WorkEntry {
   projects: ProjectEntry[];
 }
 
-export const PORTFOLIO_SECTION = {
+export const PORTFOLIO = {
   number: '004',
   title: 'Work',
   badge: 'Fig 4.1 — Portfolio',

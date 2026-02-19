@@ -1,4 +1,4 @@
-export const ABOUT_SECTION = {
+export const ABOUT = {
   number: '002',
   title: 'About',
   backgroundHeading: 'Background',
@@ -10,7 +10,7 @@ export const ABOUT_SECTION = {
   approachHeading: 'Approach',
 } as const;
 
-export const ABOUT_APPROACH_ITEMS = [
+export const ABOUT_APPROACH = [
   'Building component libraries and reusable systems that reduce development time',
   'Leading cross-functional teams through design and implementation',
   'Deploying accessible interfaces in cloud environments',

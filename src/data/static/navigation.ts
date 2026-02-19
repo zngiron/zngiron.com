@@ -1,4 +1,4 @@
-export const NAV_ITEMS = [
+export const NAV = [
   { label: 'About', href: '#about' },
   { label: 'Skills', href: '#skills' },
   { label: 'Work', href: '#work' },

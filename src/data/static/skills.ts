@@ -15,7 +15,7 @@ export const SKILL_CATEGORIES = [
 
 export type SkillCategoryKey = (typeof SKILL_CATEGORIES)[number];
 
-export const SKILLS_SECTION = {
+export const SKILLS = {
   number: '003',
   title: 'Skills',
 } as const;

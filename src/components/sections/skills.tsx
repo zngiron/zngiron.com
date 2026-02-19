@@ -1,5 +1,6 @@
 'use client';
 
+import type { Variants } from 'motion/react';
 import type { ReactElement } from 'react';
 import type { SkillCategoryKey } from '@/data/static/skills';
 
@@ -7,17 +8,17 @@ import { useState } from 'react';
 
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 
+import { BlockInvert, TextBlockBlur } from '@/components/common/blur';
+import { Container } from '@/components/common/container';
 import { Divider } from '@/components/common/divider';
-import { SectionContainer } from '@/components/common/section-container';
-import { SectionLabel } from '@/components/common/section-label';
-import { TextBlockBlur } from '@/components/common/text-block-blur';
+import { Label } from '@/components/common/label';
 
-import { createStaggerContainer, fadeUpVariants } from '@/lib/motion-variants';
+import { createStaggerContainer, fadeUpVariants } from '@/lib/motion';
 import { cn } from '@/lib/utils';
 
-import { SKILL_CATEGORIES, SKILLS_DATA, SKILLS_SECTION } from '@/data/static/skills';
+import { SKILL_CATEGORIES, SKILLS, SKILLS_DATA } from '@/data/static/skills';
 
-const contentFade = {
+const contentFade: Variants = {
   initial: { opacity: 0, y: 12 },
   animate: { opacity: 1, y: 0 },
   exit: { opacity: 0, y: -12 },
@@ -34,23 +35,23 @@ export function Skills(): ReactElement {
       id="skills"
       className="relative min-h-[900px] w-full"
     >
-      <SectionContainer>
+      <Container>
         <div className="col-span-full">
-          <SectionLabel
-            number={SKILLS_SECTION.number}
-            title={SKILLS_SECTION.title}
+          <Label
+            number={SKILLS.number}
+            title={SKILLS.title}
           />
         </div>
 
-        {/* Mobile/tablet: horizontal scrollable tabs */}
-        <div className={cn('col-span-full -mx-6 px-6', 'flex gap-2 overflow-x-auto', 'lg:hidden')}>
+        <div className={cn('overflow-x-auto scrollbar-none', 'col-span-full -mx-6 flex gap-2 px-6', 'lg:hidden')}>
           {SKILL_CATEGORIES.map((category) => (
             <button
               key={category}
               type="button"
               onClick={() => setActiveCategory(category)}
               className={cn(
-                'shrink-0 px-3 py-1.5 text-xs font-medium whitespace-nowrap',
+                'shrink-0 px-3 py-1.5',
+                'text-xs font-medium whitespace-nowrap',
                 activeCategory === category
                   ? 'bg-foreground text-background'
                   : 'bg-secondary text-secondary-foreground',
@@ -61,12 +62,16 @@ export function Skills(): ReactElement {
           ))}
         </div>
 
-        {/* Left: capabilities + technologies */}
-        <div className={cn('col-span-2', 'sm:col-span-4', 'lg:col-span-5')}>
+        <motion.div
+          className={cn('col-span-2', 'sm:col-span-4', 'lg:col-span-5')}
+          layout={!shouldReduceMotion}
+          transition={shouldReduceMotion ? { duration: 0.15 } : { type: 'spring', stiffness: 300, damping: 30 }}
+        >
           <AnimatePresence mode="wait">
             <motion.div
               key={activeCategory}
               className="flex flex-col gap-4"
+              layout={!shouldReduceMotion}
               variants={shouldReduceMotion ? undefined : container}
               initial="hidden"
               animate="show"
@@ -86,20 +91,27 @@ export function Skills(): ReactElement {
                   className="flex flex-1 flex-col gap-2"
                   variants={shouldReduceMotion ? undefined : container}
                 >
-                  <div className="bg-secondary flex items-center justify-center h-[22px] px-2.5 py-0.5 self-start">
-                    <p className="text-xs font-medium text-secondary-foreground text-center">Capabilities</p>
+                  <div className="flex h-[22px] items-center justify-center self-start px-2.5 py-0.5 bg-secondary">
+                    <p className="text-center text-xs font-medium text-secondary-foreground">Capabilities</p>
                   </div>
                   <div className="flex flex-col gap-2 pl-2">
                     {activeData.capabilities.map((item) => (
-                      <motion.p
+                      <motion.div
                         key={item}
                         variants={shouldReduceMotion ? undefined : fadeUpVariants}
-                        className="text-base font-normal text-foreground leading-6"
-                        whileHover={shouldReduceMotion ? {} : { x: 4 }}
-                        transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+                        className="group relative w-fit"
+                        whileHover="hover"
+                        initial="rest"
+                        animate="rest"
                       >
-                        {item}
-                      </motion.p>
+                        <p className="text-base font-normal leading-6 text-foreground">{item}</p>
+                        <motion.span
+                          aria-hidden="true"
+                          className="absolute inset-x-0 bottom-0 h-px origin-left bg-foreground"
+                          variants={{ rest: { scaleX: 0 }, hover: { scaleX: 1 } }}
+                          transition={{ duration: 0.2, ease: 'easeOut' }}
+                        />
+                      </motion.div>
                     ))}
                   </div>
                 </motion.div>
@@ -108,31 +120,37 @@ export function Skills(): ReactElement {
                   className="flex flex-1 flex-col gap-2"
                   variants={shouldReduceMotion ? undefined : container}
                 >
-                  <div className="bg-secondary flex items-center justify-center h-[22px] px-2.5 py-0.5 self-start">
-                    <p className="text-xs font-medium text-secondary-foreground text-center">Technologies</p>
+                  <div className="flex h-[22px] items-center justify-center self-start px-2.5 py-0.5 bg-secondary">
+                    <p className="text-center text-xs font-medium text-secondary-foreground">Technologies</p>
                   </div>
                   <div className="flex flex-col gap-2 pl-2">
                     {activeData.technologies.map((item) => (
-                      <motion.p
+                      <motion.div
                         key={item}
                         variants={shouldReduceMotion ? undefined : fadeUpVariants}
-                        className="text-base font-normal text-foreground leading-6"
-                        whileHover={shouldReduceMotion ? {} : { x: 4 }}
-                        transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+                        className="group relative w-fit"
+                        whileHover="hover"
+                        initial="rest"
+                        animate="rest"
                       >
-                        {item}
-                      </motion.p>
+                        <p className="text-base font-normal leading-6 text-foreground">{item}</p>
+                        <motion.span
+                          aria-hidden="true"
+                          className="absolute inset-x-0 bottom-0 h-px origin-left bg-foreground"
+                          variants={{ rest: { scaleX: 0 }, hover: { scaleX: 1 } }}
+                          transition={{ duration: 0.2, ease: 'easeOut' }}
+                        />
+                      </motion.div>
                     ))}
                   </div>
                 </motion.div>
               </div>
             </motion.div>
           </AnimatePresence>
-        </div>
+        </motion.div>
 
-        {/* Desktop: vertical category navigation */}
         <motion.div
-          className={cn('hidden', 'lg:flex lg:col-start-7 lg:col-span-5 lg:flex-col lg:items-end')}
+          className={cn('hidden', 'lg:col-start-7 lg:col-span-5 lg:flex lg:flex-col lg:items-end')}
           variants={container}
           initial="hidden"
           whileInView="show"
@@ -142,23 +160,21 @@ export function Skills(): ReactElement {
             <motion.div
               key={category}
               variants={fadeUpVariants}
+              className="-my-px"
             >
               <button
                 type="button"
                 onClick={() => setActiveCategory(category)}
-                className={cn('cursor-pointer text-left', activeCategory !== category && 'opacity-40')}
+                className={cn('cursor-pointer text-left', activeCategory !== category && 'opacity-90')}
               >
-                <TextBlockBlur>
-                  <p className="text-4xl font-semibold leading-10 text-primary-foreground whitespace-nowrap">
-                    {category}
-                  </p>
-                </TextBlockBlur>
+                <BlockInvert>
+                  <span className="text-4xl whitespace-nowrap">{category}</span>
+                </BlockInvert>
               </button>
             </motion.div>
           ))}
         </motion.div>
 
-        {/* Large title */}
         <motion.div
           className="col-span-full flex flex-col items-start pt-10"
           variants={container}
@@ -194,7 +210,7 @@ export function Skills(): ReactElement {
             </motion.div>
           </AnimatePresence>
         </motion.div>
-      </SectionContainer>
+      </Container>
     </section>
   );
 }

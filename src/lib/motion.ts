@@ -1,6 +1,6 @@
 import type { Variants } from 'motion/react';
 
-export function createStaggerContainer(stagger = 0.06) {
+export function createStaggerContainer(stagger = 0.06): Variants {
   return {
     hidden: { opacity: 0 },
     show: { opacity: 1, transition: { staggerChildren: stagger } },

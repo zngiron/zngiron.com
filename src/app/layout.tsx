@@ -5,10 +5,9 @@ import { Geist, Geist_Mono } from 'next/font/google';
 
 import { dehydrate } from '@tanstack/react-query';
 
-import { GridBackground } from '@/components/common/grid-background';
+import { GridBackground } from '@/components/common/grid';
 import { Providers } from '@/components/core/providers';
 import { Scripts } from '@/components/core/scripts';
-import { Footer } from '@/components/layout/footer';
 import { Header } from '@/components/layout/header';
 
 import { getQueryClient } from '@/lib/client';
@@ -84,12 +83,11 @@ function RootLayout({ children }: LayoutProps<'/'>): ReactElement {
       lang="en"
       suppressHydrationWarning
     >
-      <body className={cn(sans.variable, mono.variable, 'flex flex-col min-h-dvh', 'font-sans antialiased')}>
+      <body className={cn(sans.variable, mono.variable, 'flex min-h-dvh flex-col', 'font-sans antialiased')}>
         <GridBackground />
         <Providers dehydratedState={dehydratedState}>
           <Header />
           <main className="grow">{children}</main>
-          <Footer />
           <Scripts />
         </Providers>
       </body>

@@ -4,15 +4,15 @@ import type { ReactElement } from 'react';
 import type { ContactIconName } from '@/data/static/contact';
 
 import { Github, Globe, Linkedin, Mail } from 'lucide-react';
-import { motion, useReducedMotion } from 'motion/react';
+import { motion } from 'motion/react';
 
-import { SectionContainer } from '@/components/common/section-container';
-import { SectionLabel } from '@/components/common/section-label';
+import { Container } from '@/components/common/container';
+import { Label } from '@/components/common/label';
 
-import { createStaggerContainer, fadeUpVariants } from '@/lib/motion-variants';
+import { createStaggerContainer, fadeUpVariants } from '@/lib/motion';
 import { cn } from '@/lib/utils';
 
-import { CONTACT_ITEMS, CONTACT_SECTION } from '@/data/static/contact';
+import { CONTACT, CONTACT_ITEMS } from '@/data/static/contact';
 
 const CONTACT_ICONS: Record<ContactIconName, typeof Mail> = {
   mail: Mail,
@@ -22,7 +22,6 @@ const CONTACT_ICONS: Record<ContactIconName, typeof Mail> = {
 };
 
 export function Contact(): ReactElement {
-  const shouldReduceMotion = useReducedMotion();
   const container = createStaggerContainer();
 
   return (
@@ -36,14 +35,14 @@ export function Contact(): ReactElement {
         whileInView="show"
         viewport={{ once: true, margin: '-100px' }}
       >
-        <SectionContainer minHeightClassName="min-h-[600px]">
+        <Container minHeightClassName="min-h-[600px]">
           <motion.div
             variants={fadeUpVariants}
             className="col-span-full"
           >
-            <SectionLabel
-              number={CONTACT_SECTION.number}
-              title={CONTACT_SECTION.title}
+            <Label
+              number={CONTACT.number}
+              title={CONTACT.title}
             />
           </motion.div>
 
@@ -57,25 +56,26 @@ export function Contact(): ReactElement {
                   target={label === 'Email' ? undefined : '_blank'}
                   rel={label === 'Email' ? undefined : 'noopener noreferrer'}
                   className={cn(
-                    'grid grid-cols-subgrid items-center h-16 border-b border-border group',
+                    'group',
+                    'grid grid-cols-subgrid items-center h-16 border-b border-border',
                     'col-span-2',
                     'sm:col-span-4',
                     'lg:col-span-5',
                   )}
                   variants={fadeUpVariants}
-                  whileHover={shouldReduceMotion ? {} : { x: 4 }}
-                  transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+                  whileHover="hover"
                 >
-                  <div className="flex gap-2 items-center">
+                  <div className="flex items-center gap-2">
                     <Icon
                       className="size-4 text-foreground"
                       aria-hidden="true"
                     />
-                    <p className="text-xs font-normal text-foreground leading-4">{label}</p>
+                    <p className="text-xs font-normal leading-4 text-foreground">{label}</p>
                   </div>
                   <p
                     className={cn(
-                      'text-xs font-normal text-foreground leading-4 min-w-0 truncate',
+                      'min-w-0 truncate',
+                      'text-xs font-normal leading-4 text-foreground',
                       'col-span-1',
                       'sm:col-span-3',
                       'lg:col-span-4',
@@ -83,13 +83,12 @@ export function Contact(): ReactElement {
                   >
                     <span className="relative inline-flex max-w-full items-center pb-px">
                       <span className="truncate">{value}</span>
-                      <span
+                      <motion.span
                         aria-hidden="true"
-                        className={cn(
-                          'absolute inset-x-0 bottom-0 h-px origin-left bg-foreground scale-x-0',
-                          'transition-transform duration-200 ease-out',
-                          'group-hover:scale-x-100',
-                        )}
+                        className="absolute inset-x-0 bottom-0 h-px origin-left bg-foreground"
+                        style={{ scaleX: 0 }}
+                        variants={{ hover: { scaleX: 1 } }}
+                        transition={{ duration: 0.2, ease: 'easeOut' }}
                       />
                     </span>
                   </p>
@@ -97,7 +96,14 @@ export function Contact(): ReactElement {
               );
             })}
           </div>
-        </SectionContainer>
+
+          <motion.p
+            variants={fadeUpVariants}
+            className="col-span-full text-xs font-normal text-foreground"
+          >
+            &copy; {new Date().getFullYear()} Zuen Giron
+          </motion.p>
+        </Container>
       </motion.div>
     </section>
   );

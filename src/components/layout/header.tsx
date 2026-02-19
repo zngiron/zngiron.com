@@ -1,15 +1,18 @@
 'use client';
 
+import type { ReactElement } from 'react';
+
 import { useEffect, useState } from 'react';
-import Link from 'next/link';
 
 import { Menu, Moon, Sun, X } from 'lucide-react';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import { useTheme } from 'next-themes';
 
+import { gridColumns } from '@/components/common/grid';
+
 import { cn } from '@/lib/utils';
 
-import { NAV_ITEMS } from '@/data/static/navigation';
+import { NAV } from '@/data/static/navigation';
 import { useLayoutStore } from '@/data/stores/layout.store';
 
 const MOBILE_NAV_ID = 'mobile-nav';
@@ -21,7 +24,7 @@ interface HeaderNavLinkProps {
   className?: string;
 }
 
-function HeaderNavLink({ href, label, onClick, className }: HeaderNavLinkProps) {
+function HeaderNavLink({ href, label, onClick, className }: HeaderNavLinkProps): ReactElement {
   return (
     <motion.div
       initial="rest"
@@ -29,10 +32,14 @@ function HeaderNavLink({ href, label, onClick, className }: HeaderNavLinkProps) 
       whileHover="hover"
       className={className}
     >
-      <Link
+      <a
         href={href}
         onClick={onClick}
-        className="relative inline-flex h-11 cursor-pointer items-center text-background focus-visible:underline focus-visible:underline-offset-4"
+        className={cn(
+          'relative inline-flex h-11 items-center',
+          'cursor-pointer text-background',
+          'focus-visible:underline focus-visible:underline-offset-4',
+        )}
       >
         <span className="font-medium">{label}</span>
         <motion.span
@@ -41,12 +48,12 @@ function HeaderNavLink({ href, label, onClick, className }: HeaderNavLinkProps) 
           variants={{ rest: { scaleX: 0 }, hover: { scaleX: 1 } }}
           transition={{ duration: 0.2, ease: 'easeOut' }}
         />
-      </Link>
+      </a>
     </motion.div>
   );
 }
 
-export function Header() {
+export function Header(): ReactElement {
   const isMenuOpen = useLayoutStore((state) => state.isMenuOpen);
   const toggleMenu = useLayoutStore((state) => state.toggleMenu);
   const closeMenu = useLayoutStore((state) => state.closeMenu);
@@ -77,17 +84,22 @@ export function Header() {
   const isDark = resolvedTheme === 'dark';
 
   return (
-    <header className="fixed inset-x-0 top-0 z-50">
+    <header className="fixed inset-x-0 top-0 z-50 pt-[env(safe-area-inset-top)]">
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute left-0 top-0 h-full w-6 bg-foreground/80 backdrop-blur-xl lg:hidden"
+        className={cn(
+          'pointer-events-none',
+          'absolute left-0 top-0 h-full w-6',
+          'bg-foreground/80 backdrop-blur-xl',
+          'lg:hidden',
+        )}
       />
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute right-0 top-0 h-full w-6 bg-foreground/80 backdrop-blur-xl"
+        className={cn('pointer-events-none', 'absolute right-0 top-0 h-full w-6', 'bg-foreground/80 backdrop-blur-xl')}
       />
 
-      <div className={cn('grid grid-cols-2 gap-6 px-6', 'sm:grid-cols-4', 'lg:grid-cols-12')}>
+      <div className={gridColumns}>
         <div
           className={cn(
             'col-span-full',
@@ -96,17 +108,18 @@ export function Header() {
           )}
         >
           <div className="flex h-14 items-center px-6">
-            <Link
+            {/* biome-ignore lint/a11y/useValidAnchor: hash anchor for native smooth scroll */}
+            <a
               href="#hero"
               onClick={handleNavClick}
               className="shrink-0 cursor-pointer text-2xl font-semibold text-background"
             >
               ZG
-            </Link>
+            </a>
 
             <div className="flex flex-1 items-center justify-end gap-6">
-              <nav className="hidden lg:flex items-center gap-6">
-                {NAV_ITEMS.map(({ label, href }) => (
+              <nav className={cn('hidden items-center gap-6', 'lg:flex')}>
+                {NAV.map(({ label, href }) => (
                   <HeaderNavLink
                     key={href}
                     href={href}
@@ -122,7 +135,8 @@ export function Header() {
                   onClick={handleThemeToggle}
                   aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
                   className={cn(
-                    'flex size-11 cursor-pointer items-center justify-center border-0 bg-transparent p-0 appearance-none',
+                    'flex size-11 items-center justify-center border-0 p-0',
+                    'cursor-pointer appearance-none bg-transparent',
                     'text-background hover:text-background active:text-background focus-visible:text-background',
                   )}
                 >
@@ -169,8 +183,10 @@ export function Header() {
                 <button
                   type="button"
                   className={cn(
-                    'lg:hidden flex size-11 cursor-pointer items-center justify-center border-0 bg-transparent p-0 appearance-none',
+                    'flex size-11 items-center justify-center border-0 p-0',
+                    'cursor-pointer appearance-none bg-transparent',
                     'text-background hover:text-background active:text-background focus-visible:text-background',
+                    'lg:hidden',
                   )}
                   aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
                   aria-expanded={isMenuOpen}
@@ -222,14 +238,14 @@ export function Header() {
             {isMenuOpen && (
               <motion.nav
                 id={MOBILE_NAV_ID}
-                className="relative lg:hidden overflow-x-visible overflow-y-hidden"
+                className={cn('overflow-x-visible overflow-y-hidden', 'relative', 'lg:hidden')}
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: 'auto' }}
                 exit={{ opacity: 0, height: 0 }}
                 transition={shouldReduceMotion ? { duration: 0.15 } : { type: 'spring', stiffness: 300, damping: 30 }}
               >
                 <div className="flex flex-col gap-1 px-6 py-4">
-                  {NAV_ITEMS.map(({ label, href }) => (
+                  {NAV.map(({ label, href }) => (
                     <HeaderNavLink
                       key={href}
                       href={href}
