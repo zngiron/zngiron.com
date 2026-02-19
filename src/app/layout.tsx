@@ -1,9 +1,11 @@
 import type { Metadata, Viewport } from 'next';
+import type { ReactElement } from 'react';
 
 import { Geist, Geist_Mono } from 'next/font/google';
 
 import { dehydrate } from '@tanstack/react-query';
 
+import { GridBackground } from '@/components/common/grid-background';
 import { Providers } from '@/components/core/providers';
 import { Scripts } from '@/components/core/scripts';
 import { Footer } from '@/components/layout/footer';
@@ -18,7 +20,7 @@ import '@/app/globals.css';
 const sans = Geist({
   display: 'swap',
   variable: '--font-sans',
-  weight: ['500', '700'],
+  weight: ['400', '500', '600', '700'],
   subsets: ['latin'],
 });
 
@@ -39,32 +41,41 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   metadataBase: new URL(env.SITE_URL),
   title: {
-    default: 'Front-End Development',
-    template: '%s | Front-End Development',
+    default: 'Zuen Giron — Front-End Developer & UX Designer',
+    template: '%s | Zuen Giron',
   },
-  description: 'Front-End Development',
+  description:
+    'Senior Front-End Developer and UX Designer with 15+ years of experience delivering user-centered, scalable digital products across fintech, blockchain, and e-commerce.',
   openGraph: {
+    title: 'Zuen Giron — Front-End Developer & UX Designer',
+    description:
+      'Senior Front-End Developer and UX Designer with 15+ years of experience delivering user-centered, scalable digital products across fintech, blockchain, and e-commerce.',
     type: 'website',
-    url: '/',
-    siteName: 'Frontend Development',
+    url: env.SITE_URL,
+    siteName: 'Zuen Giron',
     images: [
       {
-        url: '/static/frontend-dev-thumbnail.png',
+        url: '/static/zngiron-thumbnail.png',
         width: 1200,
         height: 630,
-        alt: 'Front-End Development',
+        alt: 'Zuen Giron — Front-End Developer & UX Designer',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
+    title: 'Zuen Giron — Front-End Developer & UX Designer',
+    description:
+      'Senior Front-End Developer and UX Designer with 15+ years of experience delivering user-centered, scalable digital products.',
+    images: ['/static/zngiron-thumbnail.png'],
   },
+  robots: { index: true, follow: true },
   icons: {
     icon: '/static/frontend-dev-icon.png',
   },
 };
 
-function RootLayout({ children }: LayoutProps<'/'>) {
+function RootLayout({ children }: LayoutProps<'/'>): ReactElement {
   const client = getQueryClient();
   const dehydratedState = dehydrate(client);
 
@@ -74,6 +85,7 @@ function RootLayout({ children }: LayoutProps<'/'>) {
       suppressHydrationWarning
     >
       <body className={cn(sans.variable, mono.variable, 'flex flex-col min-h-dvh', 'font-sans antialiased')}>
+        <GridBackground />
         <Providers dehydratedState={dehydratedState}>
           <Header />
           <main className="grow">{children}</main>

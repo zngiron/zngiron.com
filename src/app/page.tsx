@@ -1,17 +1,19 @@
-import Image from 'next/image';
+import type { ReactElement } from 'react';
 
-export default function Page(_: PageProps<'/'>) {
+import { About } from '@/components/sections/about';
+import { Contact } from '@/components/sections/contact';
+import { Hero } from '@/components/sections/hero';
+import { Skills } from '@/components/sections/skills';
+import { Work } from '@/components/sections/work';
+
+export default function Page(_: PageProps<'/'>): ReactElement {
   return (
-    <div className="flex flex-col items-center justify-center min-h-dvh">
-      <Image
-        className="size-16"
-        src="/static/frontend-dev-icon.svg"
-        alt="Front-End Development"
-        width={64}
-        height={64}
-        draggable={false}
-        priority
-      />
-    </div>
+    <>
+      <Hero />
+      <About />
+      <Skills />
+      <Work />
+      <Contact />
+    </>
   );
 }
