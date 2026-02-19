@@ -79,10 +79,19 @@ export function Contact(): ReactElement {
                       'col-span-1',
                       'sm:col-span-3',
                       'lg:col-span-4',
-                      'group-hover:underline underline-offset-2',
                     )}
                   >
-                    {value}
+                    <span className="relative inline-flex max-w-full items-center pb-px">
+                      <span className="truncate">{value}</span>
+                      <span
+                        aria-hidden="true"
+                        className={cn(
+                          'absolute inset-x-0 bottom-0 h-px origin-left bg-foreground scale-x-0',
+                          'transition-transform duration-200 ease-out',
+                          'group-hover:scale-x-100',
+                        )}
+                      />
+                    </span>
                   </p>
                 </motion.a>
               );
