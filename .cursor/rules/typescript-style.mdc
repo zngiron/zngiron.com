@@ -1,0 +1,100 @@
+---
+description: "TypeScript strict conventions: no any, no assertions, explicit types, interface vs type, Zod, and Biome formatting"
+alwaysApply: true
+---
+
+# TypeScript Style
+
+## Strict Rules
+
+- **No `any`** — use `unknown` + type guards
+- **No `as` assertions** — use type guards, generics, or `satisfies`
+- **No `!` non-null assertions** — handle nullability explicitly
+- **No `enum`** — use `as const` objects or union types
+- **No `namespace`** — use ES modules
+- **No JSDoc** — self-documenting code with descriptive names
+- **Explicit return types** on all exported functions and hooks
+
+## Interface vs Type
+
+`interface` for object shapes, props, API responses. `type` for unions, intersections, mapped types:
+
+```tsx
+interface UserCardProps {
+  user: User;
+  isCompact?: boolean;
+  onSelect: (id: string) => void;
+}
+
+type Status = 'active' | 'inactive' | 'pending';
+type Result<T> = { data: T; error: null } | { data: null; error: Error };
+```
+
+## Enum Alternatives
+
+```tsx
+const STATUS = { active: 'active', inactive: 'inactive', pending: 'pending' } as const;
+type Status = (typeof STATUS)[keyof typeof STATUS];
+
+type Variant = 'default' | 'destructive' | 'outline';
+```
+
+## Type Imports
+
+Always `import type` for type-only imports:
+
+```tsx
+import type { ReactNode, MouseEvent } from 'react';
+import type { User } from '@/data/api/users';
+```
+
+## Clean Function Signatures
+
+Named `interface` for complex params — keep signatures readable:
+
+```tsx
+interface FormatPriceParams {
+  amount: number;
+  currency: string;
+}
+
+export function formatPrice({ amount, currency }: FormatPriceParams): string {
+  return new Intl.NumberFormat('en-US', { style: 'currency', currency }).format(amount);
+}
+
+// 1-2 primitives can be inline
+export function getUser(id: string): Promise<User> { ... }
+```
+
+Arrow functions for local handlers:
+
+```tsx
+const handleClick = (event: MouseEvent<HTMLButtonElement>): void => {
+  event.preventDefault();
+};
+```
+
+## Code Style (Biome)
+
+2-space indent, single quotes, 120 char width, trailing commas, semicolons.
+
+## Zod for Runtime Validation
+
+```tsx
+const userSchema = z.object({
+  id: z.string(),
+  name: z.string().min(1),
+  email: z.email(),
+});
+
+type User = z.infer<typeof userSchema>;
+```
+
+## Nullability
+
+```tsx
+const user = users.find((u) => u.id === id);
+if (!user) throw new Error(`User ${id} not found`);
+
+const name = user?.profile?.displayName ?? 'Anonymous';
+```

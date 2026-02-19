@@ -1,0 +1,136 @@
+---
+description: "Next.js patterns: Server/Client Components, Prop Helpers, async params, App Router, metadata, error boundaries, and performance"
+alwaysApply: true
+---
+
+# Next.js Patterns
+
+## Prop Helpers
+
+Use auto-generated `PageProps` and `LayoutProps` — never manually type page/layout props:
+
+```tsx
+export default function Page(_: PageProps<'/'>) {
+  return <div>Home</div>;
+}
+
+function RootLayout({ children }: LayoutProps<'/'>) {
+  return <html>{children}</html>;
+}
+export default RootLayout;
+```
+
+## Async Params (Next.js 15+)
+
+`params` and `searchParams` are **Promises** — always `await` them. `children` is not a Promise.
+
+```tsx
+export default async function Page({ params }: PageProps<'/blog/[slug]'>) {
+  const { slug } = await params;
+  return <article>{slug}</article>;
+}
+
+export default async function Page({ searchParams }: PageProps<'/products'>) {
+  const { page, sort } = await searchParams;
+  return <ProductList page={page} sort={sort} />;
+}
+
+export async function generateMetadata({ params }: PageProps<'/blog/[slug]'>): Promise<Metadata> {
+  const { slug } = await params;
+  return { title: `Blog - ${slug}` };
+}
+```
+
+Pages/layouts without dynamic segments don't need `async`.
+
+## Default Exports — App Router Exception
+
+App Router requires default exports for `page.tsx`, `layout.tsx`, `error.tsx`, `loading.tsx`, `not-found.tsx`. This is the **only** exception to named-exports-only.
+
+## Server vs Client Components
+
+Default to Server Components. Add `'use client'` only for:
+- Event handlers, React hooks, Browser APIs, client libraries (motion/react, react-hook-form)
+
+Push `'use client'` as deep as possible — wrap only the interactive leaf:
+
+```tsx
+function ProductPage({ product }: ProductPageProps) {
+  return (
+    <article>
+      <h1>{product.name}</h1>
+      <AddToCartButton productId={product.id} />
+    </article>
+  );
+}
+```
+
+## App Router Files
+
+| File | Purpose |
+|------|---------|
+| `page.tsx` | Route entry (Server Component) |
+| `layout.tsx` | Persistent layout (Server Component) |
+| `loading.tsx` | Suspense fallback |
+| `error.tsx` | Error boundary (`'use client'` required) |
+| `not-found.tsx` | 404 UI |
+| `route.ts` | API handler |
+| `template.tsx` | Re-mounting layout |
+
+## Metadata
+
+```tsx
+// Static
+export const metadata: Metadata = { title: 'Home', description: '...' };
+
+// Dynamic — use async + await params
+export async function generateMetadata({ params }: PageProps<'/blog/[slug]'>): Promise<Metadata> {
+  const { slug } = await params;
+  return { title: `Blog - ${slug}` };
+}
+```
+
+## Error Boundaries
+
+Every meaningful route segment should have an `error.tsx`. Log with `@/lib/logger`, never expose raw errors:
+
+```tsx
+'use client';
+
+import { useEffect } from 'react';
+
+import { logger } from '@/lib/logger';
+
+interface ErrorPageProps {
+  error: Error;
+  reset: () => void;
+}
+
+export default function Error({ error, reset }: ErrorPageProps) {
+  useEffect(() => {
+    logger.error({ context: 'error-boundary' }, error.message);
+  }, [error]);
+
+  return (
+    <div role="alert">
+      <h2>Something went wrong</h2>
+      <button onClick={reset}>Try again</button>
+    </div>
+  );
+}
+```
+
+## Loading States
+
+Use `loading.tsx` for routes, `<Suspense>` for components. Show skeleton UIs, never blank screens.
+
+## Environment Variables
+
+Access exclusively through `@/lib/env` (Zod-validated). Never `process.env` directly. Client vars prefixed `NEXT_PUBLIC_`.
+
+## Performance
+
+- `next/Image` with `width`/`height` or `fill` — never `<img>`
+- `next/font` for fonts, `next/dynamic` for lazy-loading
+- `<Suspense>` for streaming, `@next/third-parties` for scripts
+- Minimize `'use client'` boundaries

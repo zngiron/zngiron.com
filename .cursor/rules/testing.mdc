@@ -1,0 +1,76 @@
+---
+description: "Playwright E2E testing: structure, selectors, accessibility audits, and test conventions"
+alwaysApply: true
+---
+
+# Testing
+
+## Stack
+
+@playwright/test + @axe-core/playwright. Install when ready to implement.
+
+## File Organization
+
+```
+tests/
+├── accessibility.spec.ts       # WCAG audits across pages
+├── auth.spec.ts                # Feature: login, register, logout
+├── checkout.spec.ts            # Feature: cart → payment → confirmation
+├── dashboard.spec.ts           # Page: dashboard functionality
+├── settings.spec.ts            # Page: settings
+└── playwright.config.ts
+```
+
+Feature flows: name by feature. Single-page tests: name by page.
+
+## Selector Priority
+
+1. ARIA roles — `getByRole('button', { name: 'Submit' })`
+2. Labels — `getByLabel('Email')`
+3. Placeholder — `getByPlaceholder('Search...')`
+4. Text — `getByText('Welcome back')`
+5. Test ID — `getByTestId('...')` (last resort)
+
+Never CSS selectors or XPath.
+
+## Test Structure
+
+```tsx
+import { expect, test } from '@playwright/test';
+
+test.describe('authentication', () => {
+  test('should log in with valid credentials', async ({ page }) => {
+    await page.goto('/login');
+    await page.getByLabel('Email').fill('user@example.com');
+    await page.getByLabel('Password').fill('password123');
+    await page.getByRole('button', { name: 'Sign In' }).click();
+
+    await expect(page).toHaveURL('/dashboard');
+    await expect(page.getByRole('heading', { name: 'Dashboard' })).toBeVisible();
+  });
+});
+```
+
+## Principles
+
+- Test behavior, not implementation
+- Each test isolated — no shared state
+- Descriptive names: `should show error with invalid credentials`
+- Arrange-Act-Assert
+- No hardcoded waits — use auto-waiting
+- One assertion per concern
+
+## Accessibility Audits
+
+```tsx
+import AxeBuilder from '@axe-core/playwright';
+import { expect, test } from '@playwright/test';
+
+test('home page passes accessibility audit', async ({ page }) => {
+  await page.goto('/');
+  const results = await new AxeBuilder({ page }).withTags(['wcag2aaa']).analyze();
+  expect(results.violations).toEqual([]);
+});
+```
+
+Run audits for every critical page. Add `data-testid` only when ARIA selectors are insufficient.

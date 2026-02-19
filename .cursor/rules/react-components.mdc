@@ -1,0 +1,86 @@
+---
+description: "React component patterns: declarations, exports, props, composition, naming, and accessibility (WCAG AAA)"
+alwaysApply: true
+---
+
+# React Components
+
+## Declaration
+
+Named exports + function declarations. Never default exports (except App Router files), never arrow function components:
+
+```tsx
+export function UserProfile({ user }: UserProfileProps) {
+  return <div>{user.name}</div>;
+}
+```
+
+## Props
+
+- Define with `interface`, destructure in signature, provide defaults inline
+- Callback props: `on` prefix (`onSelect`, `onChange`)
+- Internal handlers: `handle` prefix (`handleClick`, `handleSubmit`)
+- Booleans: `is`/`has`/`should` prefix (`isLoading`, `hasError`)
+
+```tsx
+interface DialogProps {
+  title: string;
+  isOpen?: boolean;
+  onClose: () => void;
+  children: ReactNode;
+}
+
+export function Dialog({ title, isOpen = false, onClose, children }: DialogProps) {
+  if (!isOpen) return null;
+  // ...
+}
+```
+
+## Early Returns
+
+Reduce nesting — return early for guard clauses:
+
+```tsx
+export function UserAvatar({ user, size = 'md' }: UserAvatarProps) {
+  if (!user) return null;
+  if (!user.avatarUrl) return <FallbackAvatar size={size} />;
+  return <Image src={user.avatarUrl} alt={user.name} />;
+}
+```
+
+## Composition
+
+- Prefer composition over prop drilling
+- Use `children` and render props
+- Extend shadcn/ui via composition, never modify source
+- Reusable logic → `@/hooks`, domain types → `@/data/api/`
+- Component-specific types stay in the component file
+
+## Accessibility (WCAG 2.1 AAA)
+
+### Semantic HTML
+- `<button>` for actions, `<a>` for navigation — never `<div onClick>`
+- Semantic elements: `<nav>`, `<main>`, `<section>`, `<article>`
+- Proper heading hierarchy: `h1` → `h2` → `h3`, never skip
+
+### Keyboard
+- All interactive elements keyboard accessible (`Tab`, `Enter`, `Space`, `Escape`)
+- Trap focus in modals, return focus on close
+
+### ARIA
+- `aria-label` on icon-only buttons
+- `aria-hidden="true"` on decorative icons
+- `aria-describedby` for supplementary descriptions
+- `aria-live` for dynamic updates
+
+### Contrast
+- Normal text: 7:1 (AAA), large text: 4.5:1
+- Never rely solely on color
+
+### Example
+
+```tsx
+<button aria-label="Close dialog" onClick={handleClose}>
+  <XIcon aria-hidden="true" />
+</button>
+```
