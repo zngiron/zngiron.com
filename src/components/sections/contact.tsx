@@ -3,7 +3,7 @@
 import type { ReactElement } from 'react';
 import type { ContactIconName } from '@/data/static/contact';
 
-import { Github, Globe, Linkedin, Mail } from 'lucide-react';
+import { ArrowUpRight, Github, Globe, Linkedin, Mail } from 'lucide-react';
 import { motion } from 'motion/react';
 
 import { Container } from '@/components/common/container';
@@ -25,7 +25,7 @@ export function Contact(): ReactElement {
   const container = createStaggerContainer();
 
   return (
-    <section
+    <footer
       id="contact"
       className="relative min-h-[600px] w-full"
     >
@@ -64,6 +64,7 @@ export function Contact(): ReactElement {
                   )}
                   variants={fadeUpVariants}
                   whileHover="hover"
+                  whileTap={{ opacity: 0.7 }}
                 >
                   <div className="flex items-center gap-2">
                     <Icon
@@ -72,26 +73,30 @@ export function Contact(): ReactElement {
                     />
                     <p className="text-xs font-normal leading-4 text-foreground">{label}</p>
                   </div>
-                  <p
-                    className={cn(
-                      'min-w-0 truncate',
-                      'text-xs font-normal leading-4 text-foreground',
-                      'col-span-1',
-                      'sm:col-span-3',
-                      'lg:col-span-4',
-                    )}
+                  <div
+                    className={cn('flex min-w-0 items-center gap-2', 'col-span-1', 'sm:col-span-3', 'lg:col-span-4')}
                   >
-                    <span className="relative inline-flex max-w-full items-center pb-px">
-                      <span className="truncate">{value}</span>
-                      <motion.span
-                        aria-hidden="true"
-                        className="absolute inset-x-0 bottom-0 h-px origin-left bg-foreground"
-                        style={{ scaleX: 0 }}
-                        variants={{ hover: { scaleX: 1 } }}
-                        transition={{ duration: 0.2, ease: 'easeOut' }}
-                      />
-                    </span>
-                  </p>
+                    <p className="min-w-0 truncate text-xs font-normal leading-4 text-foreground">
+                      <span className="relative inline-flex max-w-full items-center pb-px">
+                        <span className="truncate">{value}</span>
+                        <motion.span
+                          aria-hidden="true"
+                          className="absolute inset-x-0 bottom-0 h-px origin-left bg-foreground"
+                          style={{ scaleX: 0 }}
+                          variants={{ hover: { scaleX: 1 } }}
+                          transition={{ duration: 0.2, ease: 'easeOut' }}
+                        />
+                      </span>
+                    </p>
+                    <motion.span
+                      initial={{ opacity: 0, x: -4 }}
+                      variants={{ hover: { opacity: 1, x: 0 } }}
+                      transition={{ duration: 0.15 }}
+                      aria-hidden="true"
+                    >
+                      <ArrowUpRight className="size-3.5 text-foreground" />
+                    </motion.span>
+                  </div>
                 </motion.a>
               );
             })}
@@ -105,6 +110,6 @@ export function Contact(): ReactElement {
           </motion.p>
         </Container>
       </motion.div>
-    </section>
+    </footer>
   );
 }

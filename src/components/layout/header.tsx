@@ -2,7 +2,7 @@
 
 import type { ReactElement } from 'react';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { Menu, Moon, Sun, X } from 'lucide-react';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
@@ -12,6 +12,8 @@ import { gridColumns } from '@/components/common/grid';
 
 import { cn } from '@/lib/utils';
 
+import { useActiveSection } from '@/hooks/use-active-section';
+import { useFocusTrap } from '@/hooks/use-focus-trap';
 import { NAV } from '@/data/static/navigation';
 import { useLayoutStore } from '@/data/stores/layout.store';
 
@@ -20,21 +22,23 @@ const MOBILE_NAV_ID = 'mobile-nav';
 interface HeaderNavLinkProps {
   href: string;
   label: string;
+  isActive?: boolean;
   onClick: () => void;
   className?: string;
 }
 
-function HeaderNavLink({ href, label, onClick, className }: HeaderNavLinkProps): ReactElement {
+function HeaderNavLink({ href, label, isActive = false, onClick, className }: HeaderNavLinkProps): ReactElement {
   return (
     <motion.div
       initial="rest"
-      animate="rest"
+      animate={isActive ? 'hover' : 'rest'}
       whileHover="hover"
       className={className}
     >
       <a
         href={href}
         onClick={onClick}
+        aria-current={isActive ? 'true' : undefined}
         className={cn(
           'relative inline-flex h-11 items-center',
           'cursor-pointer text-background',
@@ -54,9 +58,12 @@ function HeaderNavLink({ href, label, onClick, className }: HeaderNavLinkProps):
 }
 
 export function Header(): ReactElement {
+  const headerRef = useRef<HTMLElement>(null);
   const isMenuOpen = useLayoutStore((state) => state.isMenuOpen);
   const toggleMenu = useLayoutStore((state) => state.toggleMenu);
   const closeMenu = useLayoutStore((state) => state.closeMenu);
+  const activeSection = useActiveSection();
+  useFocusTrap(headerRef, isMenuOpen);
   const { resolvedTheme, setTheme } = useTheme();
   const shouldReduceMotion = useReducedMotion();
   const [mounted, setMounted] = useState(false);
@@ -84,7 +91,10 @@ export function Header(): ReactElement {
   const isDark = resolvedTheme === 'dark';
 
   return (
-    <header className="fixed inset-x-0 top-0 z-50 pt-[env(safe-area-inset-top)]">
+    <header
+      ref={headerRef}
+      className="fixed inset-x-0 top-0 z-50 pt-[env(safe-area-inset-top)]"
+    >
       <div
         aria-hidden="true"
         className={cn(
@@ -107,7 +117,7 @@ export function Header(): ReactElement {
             'lg:col-start-7 lg:col-span-6',
           )}
         >
-          <div className="flex h-14 items-center px-6">
+          <div className="flex h-14 items-center lg:px-6">
             {/* biome-ignore lint/a11y/useValidAnchor: hash anchor for native smooth scroll */}
             <a
               href="#hero"
@@ -124,6 +134,7 @@ export function Header(): ReactElement {
                     key={href}
                     href={href}
                     label={label}
+                    isActive={activeSection === href.slice(1)}
                     onClick={handleNavClick}
                   />
                 ))}
@@ -244,12 +255,13 @@ export function Header(): ReactElement {
                 exit={{ opacity: 0, height: 0 }}
                 transition={shouldReduceMotion ? { duration: 0.15 } : { type: 'spring', stiffness: 300, damping: 30 }}
               >
-                <div className="flex flex-col gap-1 px-6 py-4">
+                <div className="flex flex-col gap-1 py-4 lg:px-6">
                   {NAV.map(({ label, href }) => (
                     <HeaderNavLink
                       key={href}
                       href={href}
                       label={label}
+                      isActive={activeSection === href.slice(1)}
                       onClick={handleNavClick}
                       className="w-full"
                     />

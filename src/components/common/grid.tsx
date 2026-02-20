@@ -46,12 +46,18 @@ export function GridBackground(): ReactNode {
     const container = containerRef.current;
     if (!container) return;
 
+    let rafId = 0;
+
     const handleMouseMove = (e: MouseEvent): void => {
-      container.style.setProperty('--mouse-x', `${e.clientX}px`);
-      container.style.setProperty('--mouse-y', `${e.clientY}px`);
+      cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(() => {
+        container.style.setProperty('--mouse-x', `${e.clientX}px`);
+        container.style.setProperty('--mouse-y', `${e.clientY}px`);
+      });
     };
 
     const handleMouseLeave = (): void => {
+      cancelAnimationFrame(rafId);
       container.style.setProperty('--mouse-x', '-1000px');
       container.style.setProperty('--mouse-y', '-1000px');
     };
@@ -60,6 +66,7 @@ export function GridBackground(): ReactNode {
     document.addEventListener('mouseleave', handleMouseLeave);
 
     return () => {
+      cancelAnimationFrame(rafId);
       document.removeEventListener('mousemove', handleMouseMove);
       document.removeEventListener('mouseleave', handleMouseLeave);
     };

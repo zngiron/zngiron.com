@@ -5,6 +5,7 @@ import { Geist, Geist_Mono } from 'next/font/google';
 
 import { dehydrate } from '@tanstack/react-query';
 
+import { ButtonBackToTop } from '@/components/common/button-back-to-top';
 import { GridBackground } from '@/components/common/grid';
 import { Providers } from '@/components/core/providers';
 import { Scripts } from '@/components/core/scripts';
@@ -88,6 +89,7 @@ function RootLayout({ children }: LayoutProps<'/'>): ReactElement {
         <Providers dehydratedState={dehydratedState}>
           <Header />
           <main className="grow">{children}</main>
+          <ButtonBackToTop />
           <Scripts />
         </Providers>
       </body>

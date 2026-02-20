@@ -1,9 +1,9 @@
 'use client';
 
 import type { Variants } from 'motion/react';
-import type { ReactElement } from 'react';
+import type { ReactElement, KeyboardEvent as ReactKeyboardEvent } from 'react';
 
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 
 import { ArrowUpRight, Minus, Plus } from 'lucide-react';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
@@ -35,6 +35,31 @@ export function Work(): ReactElement {
   const handleToggle = (id: string): void => {
     setExpandedId((prev) => (prev === id ? null : id));
   };
+
+  const handleKeyDown = useCallback((event: ReactKeyboardEvent<HTMLButtonElement>, index: number): void => {
+    const id = event.currentTarget.id;
+    const prefix = id.startsWith('work-trigger-mobile-') ? 'work-trigger-mobile-' : 'work-trigger-';
+    let targetIndex = -1;
+
+    if (event.key === 'ArrowDown') {
+      event.preventDefault();
+      targetIndex = (index + 1) % PORTFOLIO_DATA.length;
+    } else if (event.key === 'ArrowUp') {
+      event.preventDefault();
+      targetIndex = (index - 1 + PORTFOLIO_DATA.length) % PORTFOLIO_DATA.length;
+    } else if (event.key === 'Home') {
+      event.preventDefault();
+      targetIndex = 0;
+    } else if (event.key === 'End') {
+      event.preventDefault();
+      targetIndex = PORTFOLIO_DATA.length - 1;
+    }
+
+    if (targetIndex >= 0) {
+      const target = document.getElementById(`${prefix}${PORTFOLIO_DATA[targetIndex].id}`);
+      target?.focus();
+    }
+  }, []);
 
   return (
     <section
@@ -76,7 +101,7 @@ export function Work(): ReactElement {
 
           <div
             className={cn(
-              'flex items-center justify-between border-b border-border px-4 py-3',
+              'flex items-center justify-between border-b border-border px-6 py-3',
               'bg-background text-foreground',
               'md:hidden',
             )}
@@ -94,10 +119,11 @@ export function Work(): ReactElement {
             whileInView="show"
             viewport={{ once: true, margin: '-50px' }}
           >
-            {PORTFOLIO_DATA.map((entry) => {
+            {PORTFOLIO_DATA.map((entry, entryIndex) => {
               const isExpanded = expandedId === entry.id;
               const panelId = `work-panel-${entry.id}`;
               const triggerId = `work-trigger-${entry.id}`;
+              const triggerMobileId = `work-trigger-mobile-${entry.id}`;
 
               return (
                 <motion.div
@@ -129,6 +155,7 @@ export function Work(): ReactElement {
                       aria-expanded={isExpanded}
                       aria-controls={panelId}
                       onClick={() => handleToggle(entry.id)}
+                      onKeyDown={(e) => handleKeyDown(e, entryIndex)}
                     >
                       <span className="text-xs leading-4">{entry.number}</span>
                       <span className="text-xs leading-4">{entry.client}</span>
@@ -158,9 +185,10 @@ export function Work(): ReactElement {
                     </button>
 
                     <button
+                      id={triggerMobileId}
                       type="button"
                       className={cn(
-                        'flex w-full min-h-[56px] items-center justify-between px-4 py-4',
+                        'flex w-full min-h-[56px] items-center justify-between px-6 py-4',
                         'cursor-pointer text-left',
                         'focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring',
                         'md:hidden',
@@ -168,6 +196,7 @@ export function Work(): ReactElement {
                       aria-expanded={isExpanded}
                       aria-controls={panelId}
                       onClick={() => handleToggle(entry.id)}
+                      onKeyDown={(e) => handleKeyDown(e, entryIndex)}
                     >
                       <div className="flex min-w-0 items-center gap-3">
                         <span className="shrink-0 text-xs leading-4">{entry.number}</span>
@@ -221,7 +250,7 @@ export function Work(): ReactElement {
                               <p className="opacity-50 text-xs leading-4">Project</p>
                               <p className="opacity-50 text-xs leading-4">Details</p>
                               <p className="opacity-50 text-xs leading-4">Category</p>
-                              <p className="opacity-50 text-xs leading-4">Link</p>
+                              <div />
                               <div />
                             </div>
 
@@ -237,7 +266,11 @@ export function Work(): ReactElement {
                                 <motion.div
                                   key={project.name}
                                   variants={subItemVariants}
-                                  className={cn(ROW_GRID, 'py-2.5')}
+                                  className={cn(ROW_GRID, 'py-2.5 cursor-default')}
+                                  whileHover={{
+                                    backgroundColor: 'color-mix(in oklch, var(--background) 10%, transparent)',
+                                  }}
+                                  transition={{ duration: 0.15 }}
                                 >
                                   <div />
                                   <p className="text-xs font-medium leading-4">{project.name}</p>
@@ -282,7 +315,7 @@ export function Work(): ReactElement {
                             </motion.div>
                           </div>
 
-                          <div className="px-4 pb-4 md:hidden">
+                          <div className="px-6 pb-4 md:hidden">
                             <div className="opacity-50 flex flex-wrap gap-x-4 gap-y-1 pb-3">
                               <p className="text-xs leading-4">{entry.role}</p>
                               <p className="text-xs leading-4">{entry.industry}</p>

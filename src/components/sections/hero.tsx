@@ -2,11 +2,13 @@
 
 import type { ReactElement } from 'react';
 
+import { useRef } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 
-import { motion, useReducedMotion } from 'motion/react';
+import { motion, useReducedMotion, useScroll, useTransform } from 'motion/react';
 
+import { AnimatedCounter } from '@/components/common/animated-counter';
 import { BlockInvert } from '@/components/common/blur';
 import { Divider } from '@/components/common/divider';
 import { gridColumns } from '@/components/common/grid';
@@ -20,8 +22,11 @@ import { cn } from '@/lib/utils';
 import { HERO, HERO_NAMES, HERO_STATS } from '@/data/static/hero';
 
 export function Hero(): ReactElement {
+  const imageRef = useRef<HTMLDivElement>(null);
   const shouldReduceMotion = useReducedMotion();
   const container = createStaggerContainer(0.08);
+  const { scrollYProgress } = useScroll({ target: imageRef, offset: ['start start', 'end start'] });
+  const imageY = useTransform(scrollYProgress, [0, 1], ['0%', '20%']);
 
   return (
     <section
@@ -45,15 +50,25 @@ export function Hero(): ReactElement {
             'lg:order-0 lg:col-span-5 lg:min-h-0 lg:self-stretch',
           )}
         >
-          <div className="relative overflow-hidden aspect-square bg-foreground lg:aspect-auto lg:min-h-0 lg:flex-1">
-            <Image
-              src={HERO.image.src}
-              alt={HERO.image.alt}
-              fill
-              className="object-cover"
-              sizes="(max-width: 1024px) 100vw, 42vw"
-              priority
-            />
+          <div
+            ref={imageRef}
+            className="relative overflow-hidden aspect-square bg-foreground lg:aspect-auto lg:min-h-0 lg:flex-1"
+          >
+            <motion.div
+              className="absolute inset-0"
+              style={{ y: shouldReduceMotion ? 0 : imageY, scale: 1.1 }}
+            >
+              <Image
+                src={HERO.image.src}
+                alt={HERO.image.alt}
+                fill
+                className="object-cover"
+                sizes="(max-width: 1024px) 100vw, 42vw"
+                priority
+                placeholder="blur"
+                blurDataURL={HERO.image.blurDataURL}
+              />
+            </motion.div>
           </div>
           <Badge
             variant="secondary"
@@ -81,7 +96,7 @@ export function Hero(): ReactElement {
             />
           </motion.div>
 
-          <div className="flex flex-col items-start pb-4">
+          <h1 className="flex flex-col items-start pb-4">
             {HERO_NAMES.map((name) => (
               <motion.div
                 key={name}
@@ -93,7 +108,7 @@ export function Hero(): ReactElement {
                 </BlockInvert>
               </motion.div>
             ))}
-          </div>
+          </h1>
 
           <motion.p
             variants={fadeUpVariants}
@@ -110,13 +125,22 @@ export function Hero(): ReactElement {
             variants={fadeUpVariants}
             className="flex w-full items-start gap-6"
           >
-            {HERO_STATS.map(({ label, value }) => (
+            {HERO_STATS.map((stat) => (
               <div
-                key={label}
+                key={stat.label}
                 className="flex flex-1 flex-col items-start"
               >
-                <p className="text-xs font-normal text-foreground">{label}</p>
-                <p className="text-sm font-medium text-foreground sm:text-base">{value}</p>
+                <p className="text-xs font-normal text-foreground">{stat.label}</p>
+                <p className="text-sm font-medium text-foreground sm:text-base">
+                  {'animatedNumber' in stat ? (
+                    <AnimatedCounter
+                      target={stat.animatedNumber}
+                      suffix={stat.suffix}
+                    />
+                  ) : (
+                    stat.value
+                  )}
+                </p>
               </div>
             ))}
           </motion.div>

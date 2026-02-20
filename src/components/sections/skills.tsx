@@ -8,7 +8,7 @@ import { useState } from 'react';
 
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 
-import { BlockInvert, TextBlockBlur } from '@/components/common/blur';
+import { BlockInvert } from '@/components/common/blur';
 import { Container } from '@/components/common/container';
 import { Divider } from '@/components/common/divider';
 import { Label } from '@/components/common/label';
@@ -43,14 +43,20 @@ export function Skills(): ReactElement {
           />
         </div>
 
-        <div className={cn('overflow-x-auto scrollbar-none', 'col-span-full -mx-6 flex gap-2 px-6', 'lg:hidden')}>
+        <div
+          className={cn('col-span-full flex flex-wrap gap-2', 'lg:hidden')}
+          role="tablist"
+          aria-label="Skill categories"
+        >
           {SKILL_CATEGORIES.map((category) => (
             <button
               key={category}
               type="button"
+              role="tab"
+              aria-selected={activeCategory === category}
               onClick={() => setActiveCategory(category)}
               className={cn(
-                'shrink-0 px-3 py-1.5',
+                'cursor-pointer px-3 py-1.5',
                 'text-xs font-medium whitespace-nowrap',
                 activeCategory === category
                   ? 'bg-foreground text-background'
@@ -99,7 +105,7 @@ export function Skills(): ReactElement {
                       <motion.div
                         key={item}
                         variants={shouldReduceMotion ? undefined : fadeUpVariants}
-                        className="group relative w-fit"
+                        className="group relative w-fit cursor-pointer"
                         whileHover="hover"
                         initial="rest"
                         animate="rest"
@@ -128,7 +134,7 @@ export function Skills(): ReactElement {
                       <motion.div
                         key={item}
                         variants={shouldReduceMotion ? undefined : fadeUpVariants}
-                        className="group relative w-fit"
+                        className="group relative w-fit cursor-pointer"
                         whileHover="hover"
                         initial="rest"
                         animate="rest"
@@ -164,6 +170,7 @@ export function Skills(): ReactElement {
             >
               <button
                 type="button"
+                aria-pressed={activeCategory === category}
                 onClick={() => setActiveCategory(category)}
                 className={cn('cursor-pointer text-left', activeCategory !== category && 'opacity-90')}
               >
@@ -200,11 +207,9 @@ export function Skills(): ReactElement {
                   key={line}
                   className={i < activeData.titleLines.length - 1 ? '-mb-4' : ''}
                 >
-                  <TextBlockBlur className={i === activeData.titleLines.length - 1 ? 'w-full' : undefined}>
-                    <p className="text-[clamp(3rem,8vw,6rem)] font-semibold leading-none text-primary-foreground">
-                      {line}
-                    </p>
-                  </TextBlockBlur>
+                  <BlockInvert className={i === activeData.titleLines.length - 1 ? 'w-full' : undefined}>
+                    <span className="text-[clamp(3rem,8vw,6rem)]">{line}</span>
+                  </BlockInvert>
                 </div>
               ))}
             </motion.div>

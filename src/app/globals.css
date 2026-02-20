@@ -133,6 +133,11 @@
     padding-bottom: env(safe-area-inset-bottom);
   }
 
+  section,
+  footer {
+    scroll-margin-top: 3.5rem;
+  }
+
   ::selection {
     background-color: var(--foreground);
     color: var(--background);

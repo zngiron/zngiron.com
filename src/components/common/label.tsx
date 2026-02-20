@@ -7,8 +7,8 @@ interface LabelProps {
 
 export function Label({ number, title }: LabelProps): ReactElement {
   return (
-    <p className="text-xs font-medium text-foreground">
+    <h2 className="text-xs font-medium text-foreground">
       {number} — {title}
-    </p>
+    </h2>
   );
 }
