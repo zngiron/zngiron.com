@@ -26,7 +26,8 @@ export function Hero(): ReactElement {
   const shouldReduceMotion = useReducedMotion();
   const container = createStaggerContainer(0.08);
   const { scrollYProgress } = useScroll({ target: imageRef, offset: ['start start', 'end start'] });
-  const imageY = useTransform(scrollYProgress, [0, 1], ['0%', '20%']);
+  const imageY = useTransform(scrollYProgress, [0, 1], ['0%', '60%']);
+  const sidebarY = useTransform(scrollYProgress, [0, 1], ['0%', '-30%']);
 
   return (
     <section
@@ -56,7 +57,7 @@ export function Hero(): ReactElement {
           >
             <motion.div
               className="absolute inset-0"
-              style={{ y: shouldReduceMotion ? 0 : imageY, scale: 1.1 }}
+              style={{ y: shouldReduceMotion ? 0 : imageY, scale: 1.4 }}
             >
               <Image
                 src={HERO.image.src}
@@ -161,7 +162,10 @@ export function Hero(): ReactElement {
           animate={{ opacity: 1 }}
           transition={shouldReduceMotion ? { duration: 0.15 } : { delay: 0.6, duration: 0.6 }}
         >
-          <div className="flex items-end gap-0 pb-6">
+          <motion.div
+            className="flex items-end gap-0 pb-6"
+            style={{ y: shouldReduceMotion ? 0 : sidebarY }}
+          >
             <div className="flex items-center justify-center">
               <p className="text-3xl font-medium text-foreground [writing-mode:vertical-rl] whitespace-nowrap xl:text-4xl">
                 {HERO.sidebar[0]}
@@ -172,7 +176,7 @@ export function Hero(): ReactElement {
                 {HERO.sidebar[1]}
               </p>
             </div>
-          </div>
+          </motion.div>
         </motion.div>
       </div>
     </section>
