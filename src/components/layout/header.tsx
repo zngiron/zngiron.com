@@ -144,7 +144,7 @@ export function Header(): ReactElement {
                 <button
                   type="button"
                   onClick={handleThemeToggle}
-                  aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+                  aria-label={mounted ? (isDark ? 'Switch to light mode' : 'Switch to dark mode') : 'Toggle theme'}
                   className={cn(
                     'flex size-11 items-center justify-center border-0 p-0',
                     'cursor-pointer appearance-none bg-transparent',
