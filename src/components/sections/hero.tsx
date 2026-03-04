@@ -57,7 +57,7 @@ export function Hero(): ReactElement {
           >
             <motion.div
               className="absolute inset-0"
-              style={{ y: shouldReduceMotion ? 0 : imageY, scale: 1.4 }}
+              style={{ y: shouldReduceMotion ? 0 : imageY }}
             >
               <Image
                 src={HERO.image.src}
