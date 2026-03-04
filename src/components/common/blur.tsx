@@ -13,7 +13,7 @@ interface TextBlockBlurProps {
 
 export function TextBlockBlur({ children, className }: TextBlockBlurProps): ReactNode {
   return (
-    <div className={cn('flex items-center justify-center p-2', 'bg-foreground/80 backdrop-blur-xl', className)}>
+    <div className={cn('flex items-center justify-center p-2', 'bg-foreground/90 backdrop-blur-xl', className)}>
       {children}
     </div>
   );
@@ -32,7 +32,7 @@ export function BlockInvert({ children, className }: BlockInvertProps): ReactNod
       className={cn(
         'relative overflow-hidden',
         'cursor-default select-none',
-        'bg-foreground/80 backdrop-blur-xl',
+        'bg-foreground/90 backdrop-blur-xl',
         className,
       )}
       whileHover="hovered"

@@ -63,7 +63,7 @@ export function Hero(): ReactElement {
                 src={HERO.image.src}
                 alt={HERO.image.alt}
                 fill
-                className="object-cover"
+                className="object-cover grayscale"
                 sizes="(max-width: 1024px) 100vw, 42vw"
                 priority
                 placeholder="blur"

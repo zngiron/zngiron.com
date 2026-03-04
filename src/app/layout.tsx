@@ -3,15 +3,12 @@ import type { ReactElement } from 'react';
 
 import { Geist, Geist_Mono } from 'next/font/google';
 
-import { dehydrate } from '@tanstack/react-query';
-
 import { ButtonBackToTop } from '@/components/common/button-back-to-top';
 import { GridBackground } from '@/components/common/grid';
 import { Providers } from '@/components/core/providers';
 import { Scripts } from '@/components/core/scripts';
 import { Header } from '@/components/layout/header';
 
-import { getQueryClient } from '@/lib/client';
 import { env } from '@/lib/env';
 import { cn } from '@/lib/utils';
 
@@ -34,7 +31,7 @@ const mono = Geist_Mono({
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
-  maximumScale: 1,
+  maximumScale: 5,
   viewportFit: 'cover',
 };
 
@@ -76,9 +73,6 @@ export const metadata: Metadata = {
 };
 
 function RootLayout({ children }: LayoutProps<'/'>): ReactElement {
-  const client = getQueryClient();
-  const dehydratedState = dehydrate(client);
-
   return (
     <html
       lang="en"
@@ -86,7 +80,7 @@ function RootLayout({ children }: LayoutProps<'/'>): ReactElement {
     >
       <body className={cn(sans.variable, mono.variable, 'flex min-h-dvh flex-col', 'font-sans antialiased')}>
         <GridBackground />
-        <Providers dehydratedState={dehydratedState}>
+        <Providers>
           <Header />
           <main className="grow">{children}</main>
           <ButtonBackToTop />

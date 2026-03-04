@@ -23,7 +23,7 @@ interface HeaderNavLinkProps {
   href: string;
   label: string;
   isActive?: boolean;
-  onClick: () => void;
+  onClick: (e: React.MouseEvent<HTMLAnchorElement>) => void;
   className?: string;
 }
 
@@ -80,7 +80,13 @@ export function Header(): ReactElement {
     return () => document.removeEventListener('keydown', handleKeyDown);
   }, [isMenuOpen, closeMenu]);
 
-  const handleNavClick = (): void => {
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>): void => {
+    const href = e.currentTarget.getAttribute('href');
+    if (href?.startsWith('#')) {
+      e.preventDefault();
+      const target = document.getElementById(href.slice(1));
+      target?.scrollIntoView({ behavior: shouldReduceMotion ? 'instant' : 'smooth' });
+    }
     closeMenu();
   };
 
@@ -118,14 +124,18 @@ export function Header(): ReactElement {
           )}
         >
           <div className="flex h-14 items-center lg:px-6">
-            {/* biome-ignore lint/a11y/useValidAnchor: hash anchor for native smooth scroll */}
-            <a
-              href="#hero"
-              onClick={handleNavClick}
-              className="shrink-0 cursor-pointer text-2xl font-semibold text-background"
+            <button
+              type="button"
+              onClick={() => {
+                document
+                  .getElementById('hero')
+                  ?.scrollIntoView({ behavior: shouldReduceMotion ? 'instant' : 'smooth' });
+                closeMenu();
+              }}
+              className="shrink-0 cursor-pointer text-2xl font-semibold text-background bg-transparent border-0 p-0"
             >
               ZG
-            </a>
+            </button>
 
             <div className="flex flex-1 items-center justify-end gap-6">
               <nav className={cn('hidden items-center gap-6', 'lg:flex')}>
