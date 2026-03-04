@@ -26,7 +26,7 @@ export function Hero(): ReactElement {
   const shouldReduceMotion = useReducedMotion();
   const container = createStaggerContainer(0.08);
   const { scrollYProgress } = useScroll({ target: imageRef, offset: ['start start', 'end start'] });
-  const imageY = useTransform(scrollYProgress, [0, 1], ['0%', '60%']);
+  const imageY = useTransform(scrollYProgress, [0, 1], ['0%', '70%']);
   const sidebarY = useTransform(scrollYProgress, [0, 1], ['0%', '-30%']);
 
   return (
@@ -66,6 +66,7 @@ export function Hero(): ReactElement {
                 className="object-cover grayscale"
                 sizes="(max-width: 1024px) 100vw, 42vw"
                 priority
+                fetchPriority="high"
                 placeholder="blur"
                 blurDataURL={HERO.image.blurDataURL}
               />
