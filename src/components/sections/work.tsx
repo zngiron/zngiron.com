@@ -27,10 +27,16 @@ const subItemVariants: Variants = {
   },
 };
 
+const container = createStaggerContainer(0.04);
+
+const subItemStagger: Variants = {
+  hidden: { opacity: 0 },
+  show: { opacity: 1, transition: { staggerChildren: 0.05 } },
+};
+
 export function Work(): ReactElement {
   const [expandedId, setExpandedId] = useState<string | null>('freelance');
   const shouldReduceMotion = useReducedMotion();
-  const container = createStaggerContainer(0.04);
 
   const handleToggle = (id: string): void => {
     setExpandedId((prev) => (prev === id ? null : id));
@@ -64,7 +70,7 @@ export function Work(): ReactElement {
   return (
     <section
       id="work"
-      className="relative min-h-[900px] w-full"
+      className="relative min-h-[900px] w-full [content-visibility:auto] [contain-intrinsic-size:0_56.25rem]"
     >
       <div className={cn('relative z-10', 'flex min-h-[900px] w-full flex-col items-start justify-center')}>
         <motion.div
@@ -257,10 +263,7 @@ export function Work(): ReactElement {
                             <motion.div
                               initial="hidden"
                               animate="show"
-                              variants={{
-                                hidden: { opacity: 0 },
-                                show: { opacity: 1, transition: { staggerChildren: 0.05 } },
-                              }}
+                              variants={subItemStagger}
                             >
                               {entry.projects.map((project) => (
                                 <motion.div
@@ -324,10 +327,7 @@ export function Work(): ReactElement {
                             <motion.div
                               initial="hidden"
                               animate="show"
-                              variants={{
-                                hidden: { opacity: 0 },
-                                show: { opacity: 1, transition: { staggerChildren: 0.05 } },
-                              }}
+                              variants={subItemStagger}
                               className="flex flex-col gap-3"
                             >
                               {entry.projects.map((project) => (

@@ -21,13 +21,13 @@ const CONTACT_ICONS: Record<ContactIconName, typeof Mail> = {
   globe: Globe,
 };
 
-export function Contact(): ReactElement {
-  const container = createStaggerContainer();
+const container = createStaggerContainer();
 
+export function Contact(): ReactElement {
   return (
     <footer
       id="contact"
-      className="relative min-h-[600px] w-full"
+      className="relative min-h-[600px] w-full [content-visibility:auto] [contain-intrinsic-size:0_37.5rem]"
     >
       <motion.div
         variants={container}
@@ -61,6 +61,7 @@ export function Contact(): ReactElement {
                     'col-span-2',
                     'sm:col-span-4',
                     'lg:col-span-5',
+                    'focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring',
                   )}
                   variants={fadeUpVariants}
                   whileHover="hover"

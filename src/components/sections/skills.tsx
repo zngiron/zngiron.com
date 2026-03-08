@@ -24,16 +24,17 @@ const contentFade: Variants = {
   exit: { opacity: 0, y: -12 },
 };
 
+const container = createStaggerContainer(0.05);
+
 export function Skills(): ReactElement {
   const [activeCategory, setActiveCategory] = useState<SkillCategoryKey>('Front-End Development');
   const shouldReduceMotion = useReducedMotion();
-  const container = createStaggerContainer(0.05);
   const activeData = SKILLS_DATA[activeCategory];
 
   return (
     <section
       id="skills"
-      className="relative min-h-[900px] w-full"
+      className="relative min-h-[900px] w-full [content-visibility:auto] [contain-intrinsic-size:0_56.25rem]"
     >
       <Container>
         <div className="col-span-full">
@@ -58,6 +59,7 @@ export function Skills(): ReactElement {
               className={cn(
                 'cursor-pointer px-3 py-1.5',
                 'text-xs font-medium whitespace-nowrap',
+                'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring',
                 activeCategory === category
                   ? 'bg-foreground text-background'
                   : 'bg-secondary text-secondary-foreground',
@@ -172,7 +174,10 @@ export function Skills(): ReactElement {
                 type="button"
                 aria-pressed={activeCategory === category}
                 onClick={() => setActiveCategory(category)}
-                className={cn('cursor-pointer text-left', activeCategory !== category && 'opacity-90')}
+                className={cn(
+                  'cursor-pointer text-left focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring',
+                  activeCategory !== category && 'opacity-90',
+                )}
               >
                 <BlockInvert>
                   <span className="text-4xl whitespace-nowrap">{category}</span>

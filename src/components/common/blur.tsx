@@ -30,7 +30,7 @@ export function BlockInvert({ children, className }: BlockInvertProps): ReactNod
   return (
     <motion.div
       className={cn(
-        'relative overflow-hidden',
+        'group relative overflow-hidden',
         'cursor-default select-none',
         'bg-foreground/80 backdrop-blur-xl',
         className,
@@ -47,13 +47,16 @@ export function BlockInvert({ children, className }: BlockInvertProps): ReactNod
         }
         transition={shouldReduceMotion ? { duration: 0.15 } : { type: 'spring', stiffness: 400, damping: 30 }}
       />
-      <motion.span
-        className={cn('relative block p-2', 'font-semibold leading-none text-background')}
-        variants={{ idle: {}, hovered: { color: 'var(--foreground)' } }}
-        transition={shouldReduceMotion ? { duration: 0.15 } : { type: 'spring', stiffness: 400, damping: 30 }}
+      <span
+        className={cn(
+          'relative block p-2',
+          'font-semibold leading-none',
+          'text-background group-hover:text-foreground',
+          'transition-colors duration-200',
+        )}
       >
         {children}
-      </motion.span>
+      </span>
     </motion.div>
   );
 }

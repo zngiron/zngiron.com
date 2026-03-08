@@ -21,10 +21,11 @@ import { cn } from '@/lib/utils';
 
 import { HERO, HERO_NAMES, HERO_STATS } from '@/data/static/hero';
 
+const container = createStaggerContainer(0.08);
+
 export function Hero(): ReactElement {
   const imageRef = useRef<HTMLDivElement>(null);
   const shouldReduceMotion = useReducedMotion();
-  const container = createStaggerContainer(0.08);
   const { scrollYProgress } = useScroll({ target: imageRef, offset: ['start start', 'end start'] });
   const imageY = useTransform(scrollYProgress, [0, 1], ['0%', '70%']);
   const sidebarY = useTransform(scrollYProgress, [0, 1], ['0%', '-30%']);
@@ -98,7 +99,7 @@ export function Hero(): ReactElement {
             />
           </motion.div>
 
-          <h1 className="flex flex-col items-start pb-4">
+          <h1 className="flex flex-col items-start pb-4 text-pretty">
             {HERO_NAMES.map((name) => (
               <motion.div
                 key={name}
@@ -133,7 +134,7 @@ export function Hero(): ReactElement {
                 className="flex flex-1 flex-col items-start"
               >
                 <p className="text-xs font-normal text-foreground">{stat.label}</p>
-                <p className="text-sm font-medium text-foreground sm:text-base">
+                <p className="text-sm font-medium tabular-nums text-foreground sm:text-base">
                   {'animatedNumber' in stat ? (
                     <AnimatedCounter
                       target={stat.animatedNumber}

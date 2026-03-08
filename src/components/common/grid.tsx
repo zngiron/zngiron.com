@@ -62,7 +62,7 @@ export function GridBackground(): ReactNode {
       container.style.setProperty('--mouse-y', '-1000px');
     };
 
-    document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('mousemove', handleMouseMove, { passive: true });
     document.addEventListener('mouseleave', handleMouseLeave);
 
     return () => {

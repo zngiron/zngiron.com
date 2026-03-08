@@ -13,14 +13,15 @@ import { cn } from '@/lib/utils';
 
 import { ABOUT, ABOUT_APPROACH } from '@/data/static/about';
 
+const container = createStaggerContainer();
+
 export function About(): ReactElement {
   const shouldReduceMotion = useReducedMotion();
-  const container = createStaggerContainer();
 
   return (
     <section
       id="about"
-      className="relative min-h-[900px] w-full"
+      className="relative min-h-[900px] w-full [content-visibility:auto] [contain-intrinsic-size:0_56.25rem]"
     >
       <motion.div
         variants={container}

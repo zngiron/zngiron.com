@@ -132,7 +132,8 @@ export function Header(): ReactElement {
                   ?.scrollIntoView({ behavior: shouldReduceMotion ? 'instant' : 'smooth' });
                 closeMenu();
               }}
-              className="shrink-0 cursor-pointer text-2xl font-semibold text-background bg-transparent border-0 p-0"
+              aria-label="Scroll to top"
+              className="shrink-0 cursor-pointer text-2xl font-semibold text-background bg-transparent border-0 p-0 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-background"
             >
               ZG
             </button>
@@ -158,46 +159,30 @@ export function Header(): ReactElement {
                   className={cn(
                     'flex size-11 items-center justify-center border-0 p-0',
                     'cursor-pointer appearance-none bg-transparent',
-                    'text-background hover:text-background active:text-background focus-visible:text-background',
+                    'text-background hover:text-background active:text-background',
+                    'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-background',
                   )}
                 >
                   {mounted && (
-                    <AnimatePresence
-                      mode="wait"
-                      initial={false}
+                    <motion.span
+                      animate={{ rotate: isDark ? 360 : 0 }}
+                      transition={
+                        shouldReduceMotion ? { duration: 0.15 } : { type: 'spring', stiffness: 200, damping: 25 }
+                      }
+                      className="flex items-center justify-center"
                     >
                       {isDark ? (
-                        <motion.div
-                          key="moon"
-                          initial={{ opacity: 0, rotate: -360 }}
-                          animate={{ opacity: 1, rotate: 0 }}
-                          exit={{ opacity: 0 }}
-                          transition={
-                            shouldReduceMotion ? { duration: 0.15 } : { type: 'spring', stiffness: 200, damping: 25 }
-                          }
-                        >
-                          <Moon
-                            className="size-4 text-background"
-                            aria-hidden="true"
-                          />
-                        </motion.div>
+                        <Moon
+                          className="size-4 text-background"
+                          aria-hidden="true"
+                        />
                       ) : (
-                        <motion.div
-                          key="sun"
-                          initial={{ opacity: 0, rotate: -360 }}
-                          animate={{ opacity: 1, rotate: 0 }}
-                          exit={{ opacity: 0 }}
-                          transition={
-                            shouldReduceMotion ? { duration: 0.15 } : { type: 'spring', stiffness: 200, damping: 25 }
-                          }
-                        >
-                          <Sun
-                            className="size-4 text-background"
-                            aria-hidden="true"
-                          />
-                        </motion.div>
+                        <Sun
+                          className="size-4 text-background"
+                          aria-hidden="true"
+                        />
                       )}
-                    </AnimatePresence>
+                    </motion.span>
                   )}
                 </button>
 
@@ -206,7 +191,8 @@ export function Header(): ReactElement {
                   className={cn(
                     'flex size-11 items-center justify-center border-0 p-0',
                     'cursor-pointer appearance-none bg-transparent',
-                    'text-background hover:text-background active:text-background focus-visible:text-background',
+                    'text-background hover:text-background active:text-background',
+                    'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-background',
                     'lg:hidden',
                   )}
                   aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
@@ -214,42 +200,25 @@ export function Header(): ReactElement {
                   aria-controls={MOBILE_NAV_ID}
                   onClick={toggleMenu}
                 >
-                  <AnimatePresence
-                    mode="wait"
-                    initial={false}
+                  <motion.span
+                    animate={{ rotate: isMenuOpen ? 90 : 0 }}
+                    transition={
+                      shouldReduceMotion ? { duration: 0.15 } : { type: 'spring', stiffness: 400, damping: 30 }
+                    }
+                    className="flex items-center justify-center"
                   >
                     {isMenuOpen ? (
-                      <motion.div
-                        key="close"
-                        initial={{ opacity: 0, rotate: -90 }}
-                        animate={{ opacity: 1, rotate: 0 }}
-                        exit={{ opacity: 0, rotate: 90 }}
-                        transition={
-                          shouldReduceMotion ? { duration: 0.15 } : { type: 'spring', stiffness: 400, damping: 30 }
-                        }
-                      >
-                        <X
-                          className="size-5 text-background"
-                          aria-hidden="true"
-                        />
-                      </motion.div>
+                      <X
+                        className="size-5 text-background"
+                        aria-hidden="true"
+                      />
                     ) : (
-                      <motion.div
-                        key="menu"
-                        initial={{ opacity: 0, rotate: 90 }}
-                        animate={{ opacity: 1, rotate: 0 }}
-                        exit={{ opacity: 0, rotate: -90 }}
-                        transition={
-                          shouldReduceMotion ? { duration: 0.15 } : { type: 'spring', stiffness: 400, damping: 30 }
-                        }
-                      >
-                        <Menu
-                          className="size-5 text-background"
-                          aria-hidden="true"
-                        />
-                      </motion.div>
+                      <Menu
+                        className="size-5 text-background"
+                        aria-hidden="true"
+                      />
                     )}
-                  </AnimatePresence>
+                  </motion.span>
                 </button>
               </div>
             </div>
