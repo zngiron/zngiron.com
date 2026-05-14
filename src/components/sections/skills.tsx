@@ -16,7 +16,7 @@ import { Label } from '@/components/common/label';
 import { createStaggerContainer, fadeUpVariants } from '@/lib/motion';
 import { cn } from '@/lib/utils';
 
-import { SKILL_CATEGORIES, SKILLS, SKILLS_DATA } from '@/data/static/skills';
+import { SKILL_TIERS, SKILLS, SKILLS_DATA } from '@/data/static/skills';
 
 const contentFade: Variants = {
   initial: { opacity: 0, y: 12 },
@@ -27,7 +27,7 @@ const contentFade: Variants = {
 const container = createStaggerContainer(0.05);
 
 export function Skills(): ReactElement {
-  const [activeCategory, setActiveCategory] = useState<SkillCategoryKey>('Front-End Development');
+  const [activeCategory, setActiveCategory] = useState<SkillCategoryKey>('Front-End Engineering');
   const shouldReduceMotion = useReducedMotion();
   const activeData = SKILLS_DATA[activeCategory];
 
@@ -45,28 +45,38 @@ export function Skills(): ReactElement {
         </div>
 
         <div
-          className={cn('col-span-full flex flex-wrap gap-2', 'lg:hidden')}
+          className={cn('col-span-full flex flex-col gap-3', 'lg:hidden')}
           role="tablist"
           aria-label="Skill categories"
         >
-          {SKILL_CATEGORIES.map((category) => (
-            <button
-              key={category}
-              type="button"
-              role="tab"
-              aria-selected={activeCategory === category}
-              onClick={() => setActiveCategory(category)}
-              className={cn(
-                'cursor-pointer px-3 py-1.5',
-                'text-xs font-medium whitespace-nowrap',
-                'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring',
-                activeCategory === category
-                  ? 'bg-foreground text-background'
-                  : 'bg-secondary text-secondary-foreground',
-              )}
+          {SKILL_TIERS.map((tier) => (
+            <div
+              key={tier.name}
+              className="flex flex-col gap-2"
             >
-              {category}
-            </button>
+              <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">{tier.name}</p>
+              <div className="flex flex-wrap gap-2">
+                {tier.categories.map((category) => (
+                  <button
+                    key={category}
+                    type="button"
+                    role="tab"
+                    aria-selected={activeCategory === category}
+                    onClick={() => setActiveCategory(category)}
+                    className={cn(
+                      'cursor-pointer px-3 py-1.5',
+                      'text-xs font-medium whitespace-nowrap',
+                      'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring',
+                      activeCategory === category
+                        ? 'bg-foreground text-background'
+                        : 'bg-secondary text-secondary-foreground',
+                    )}
+                  >
+                    {category}
+                  </button>
+                ))}
+              </div>
+            </div>
           ))}
         </div>
 
@@ -158,31 +168,39 @@ export function Skills(): ReactElement {
         </motion.div>
 
         <motion.div
-          className={cn('hidden', 'lg:col-start-7 lg:col-span-5 lg:flex lg:flex-col lg:items-end')}
+          className={cn('hidden', 'lg:col-start-7 lg:col-span-5 lg:flex lg:flex-col lg:items-end lg:gap-4')}
           variants={container}
           initial="hidden"
           whileInView="show"
           viewport={{ once: true, margin: '-100px' }}
         >
-          {SKILL_CATEGORIES.map((category) => (
+          {SKILL_TIERS.map((tier) => (
             <motion.div
-              key={category}
+              key={tier.name}
               variants={fadeUpVariants}
-              className="-my-px"
+              className="flex flex-col items-end gap-1"
             >
-              <button
-                type="button"
-                aria-pressed={activeCategory === category}
-                onClick={() => setActiveCategory(category)}
-                className={cn(
-                  'cursor-pointer text-left focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring',
-                  activeCategory !== category && 'opacity-90',
-                )}
-              >
-                <BlockInvert>
-                  <span className="text-4xl whitespace-nowrap">{category}</span>
-                </BlockInvert>
-              </button>
+              <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">{tier.name}</p>
+              {tier.categories.map((category) => (
+                <div
+                  key={category}
+                  className="-my-px"
+                >
+                  <button
+                    type="button"
+                    aria-pressed={activeCategory === category}
+                    onClick={() => setActiveCategory(category)}
+                    className={cn(
+                      'cursor-pointer text-left focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring',
+                      activeCategory !== category && 'opacity-90',
+                    )}
+                  >
+                    <BlockInvert>
+                      <span className="text-4xl whitespace-nowrap">{category}</span>
+                    </BlockInvert>
+                  </button>
+                </div>
+              ))}
             </motion.div>
           ))}
         </motion.div>

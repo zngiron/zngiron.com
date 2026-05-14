@@ -250,7 +250,7 @@ export function Work(): ReactElement {
                                 }
                           }
                         >
-                          <div className="hidden pb-4 md:block">
+                          <div className="hidden md:block">
                             <div className={cn(ROW_GRID, 'py-2')}>
                               <div />
                               <p className="opacity-50 text-xs leading-4">Project</p>
@@ -265,9 +265,9 @@ export function Work(): ReactElement {
                               animate="show"
                               variants={subItemStagger}
                             >
-                              {entry.projects.map((project) => (
+                              {entry.projects.map((project, projectIndex) => (
                                 <motion.div
-                                  key={project.name}
+                                  key={`${entry.id}-${projectIndex}-${project.name}`}
                                   variants={subItemVariants}
                                   className={cn(ROW_GRID, 'py-2.5 cursor-default')}
                                   whileHover={{
@@ -318,7 +318,7 @@ export function Work(): ReactElement {
                             </motion.div>
                           </div>
 
-                          <div className="px-6 pb-4 md:hidden">
+                          <div className="px-6 md:hidden">
                             <div className="opacity-50 flex flex-wrap gap-x-4 gap-y-1 pb-3">
                               <p className="text-xs leading-4">{entry.role}</p>
                               <p className="text-xs leading-4">{entry.industry}</p>
@@ -330,9 +330,9 @@ export function Work(): ReactElement {
                               variants={subItemStagger}
                               className="flex flex-col gap-3"
                             >
-                              {entry.projects.map((project) => (
+                              {entry.projects.map((project, projectIndex) => (
                                 <motion.div
-                                  key={project.name}
+                                  key={`${entry.id}-${projectIndex}-${project.name}`}
                                   variants={subItemVariants}
                                   className="border-t border-current/10 pt-3 first:border-0 first:pt-0"
                                 >

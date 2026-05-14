@@ -2,16 +2,17 @@ export const ABOUT = {
   number: '002',
   title: 'About',
   backgroundHeading: 'Background',
-  highlight: 'Designing and building digital products with systematic precision and user-first thinking',
+  highlight: 'End to end Design and Engineering',
   paragraphs: [
-    'Senior Front-End Developer and UX Designer with 15 years of experience delivering user-centered, scalable digital products across fintech, blockchain, and e-commerce.',
-    'Skilled in React, Next.js, TypeScript, and design systems with a strong foundation in UX/UI using Figma and Adobe Creative Suite.',
+    'Senior Front-End Developer and Senior UX Designer with 17 years of experience building digital products across fintech, blockchain, gaming, e-commerce, and marketing.',
+    'Owns the full path from design to shipped code — fewer handoffs, fewer surprises, faster iteration.',
+    'Focuses on design systems, reusable component libraries, and accessible interfaces — the foundational layer that lets teams scale work and keep quality consistent as products evolve.',
   ],
-  approachHeading: 'Approach',
+  approachHeading: 'Focus Areas',
 } as const;
 
 export const ABOUT_APPROACH = [
-  'Building component libraries and reusable systems that reduce development time',
-  'Leading cross-functional teams through design and implementation',
-  'Deploying accessible interfaces in cloud environments',
+  'Design systems and reusable component libraries',
+  'Accessible interfaces measured against WCAG',
+  'Bridging product design and front-end engineering',
 ] as const;

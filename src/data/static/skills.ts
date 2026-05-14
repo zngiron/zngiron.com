@@ -5,15 +5,29 @@ export interface SkillCategoryData {
 }
 
 export const SKILL_CATEGORIES = [
-  'Front-End Development',
-  'UX Design',
-  'Backend Development',
-  'Cloud and DevOps',
-  'Testing and Performance',
-  'Collaboration and Planning',
+  'Design',
+  'Front-End Engineering',
+  'AI Tools',
+  'Back-End',
+  'Cloud & DevOps',
+  'Testing',
+  'CMS',
+  'Collaboration',
 ] as const;
 
 export type SkillCategoryKey = (typeof SKILL_CATEGORIES)[number];
+
+export const SKILL_TIERS: ReadonlyArray<{
+  name: string;
+  categories: readonly SkillCategoryKey[];
+}> = [
+  { name: 'Core Strengths', categories: ['Design', 'Front-End Engineering'] },
+  { name: 'AI Tools', categories: ['AI Tools'] },
+  {
+    name: 'Additional Capabilities',
+    categories: ['Back-End', 'Cloud & DevOps', 'Testing', 'CMS', 'Collaboration'],
+  },
+];
 
 export const SKILLS = {
   number: '003',
@@ -21,13 +35,31 @@ export const SKILLS = {
 } as const;
 
 export const SKILLS_DATA: Record<SkillCategoryKey, SkillCategoryData> = {
-  'Front-End Development': {
+  Design: {
+    capabilities: [
+      'Design Systems',
+      'Cross-Platform Design',
+      'User Research & Testing',
+      'Wireframing & Prototyping',
+      'Interaction Design',
+      'Information Architecture',
+      'Accessibility (WCAG)',
+    ],
+    technologies: ['Figma', 'Design Tokens', 'Material Design', 'Human Interface Guidelines', 'Mobbin'],
+    titleLines: ['Design'],
+  },
+  'Front-End Engineering': {
     capabilities: [
       'Component-Based Architecture',
       'State Management',
-      'Performance Optimization',
-      'Accessibility (WCAG)',
       'Design System Implementation',
+      'Authentication',
+      'Internationalization',
+      'Animation',
+      'Performance Optimization',
+      'Responsive Web Design',
+      'Build & Tooling',
+      'Accessibility (WCAG)',
     ],
     technologies: [
       'React',
@@ -38,24 +70,24 @@ export const SKILLS_DATA: Record<SkillCategoryKey, SkillCategoryData> = {
       'Redux',
       'TailwindCSS',
       'shadcn/ui',
+      'Radix',
       'Storybook',
       'Framer Motion',
-      'Capacitor.js',
+      'Supabase Auth',
+      'next-intl',
+      'Bun',
+      'Webpack',
+      'Babel',
+      'Turborepo',
     ],
-    titleLines: ['Front-End', 'Development'],
+    titleLines: ['Front-End', 'Engineering'],
   },
-  'UX Design': {
-    capabilities: [
-      'User Research & Testing',
-      'Wireframing & Prototyping',
-      'Interaction Design',
-      'Design Systems',
-      'Information Architecture',
-    ],
-    technologies: ['Figma', 'Adobe XD', 'Adobe Photoshop', 'Adobe Illustrator', 'Sketch', 'InVision', 'Zeplin', 'Miro'],
-    titleLines: ['UX', 'Design'],
+  'AI Tools': {
+    capabilities: ['Code Assistants', 'General Reasoning', 'Media Generation'],
+    technologies: ['Claude Code', 'Codex', 'Cursor', 'ChatGPT', 'Claude', 'Magnific', 'Eleven Labs'],
+    titleLines: ['AI', 'Tools'],
   },
-  'Backend Development': {
+  'Back-End': {
     capabilities: [
       'RESTful API Design',
       'Database Modeling',
@@ -63,10 +95,21 @@ export const SKILLS_DATA: Record<SkillCategoryKey, SkillCategoryData> = {
       'Server-Side Rendering',
       'Microservices Architecture',
     ],
-    technologies: ['Node.js', 'Express', 'PostgreSQL', 'MongoDB', 'Prisma', 'GraphQL', 'Redis', 'Firebase'],
-    titleLines: ['Backend', 'Development'],
+    technologies: [
+      'Node.js',
+      'Express',
+      'Hono',
+      'PostgreSQL',
+      'MongoDB',
+      'SQL',
+      'Prisma',
+      'Supabase',
+      'GraphQL',
+      'REST APIs',
+    ],
+    titleLines: ['Back-End'],
   },
-  'Cloud and DevOps': {
+  'Cloud & DevOps': {
     capabilities: [
       'CI/CD Pipelines',
       'Container Orchestration',
@@ -74,21 +117,27 @@ export const SKILLS_DATA: Record<SkillCategoryKey, SkillCategoryData> = {
       'Monitoring & Logging',
       'Cloud Architecture',
     ],
-    technologies: ['AWS', 'Google Cloud', 'Vercel', 'Docker', 'GitHub Actions', 'Terraform', 'Cloudflare', 'Netlify'],
-    titleLines: ['Cloud and', 'DevOps'],
+    technologies: ['Vercel', 'AWS', 'GCP', 'Cloudflare', 'Docker', 'GitHub Actions'],
+    titleLines: ['Cloud &', 'DevOps'],
   },
-  'Testing and Performance': {
+  Testing: {
     capabilities: [
       'End-to-End Testing',
       'Unit & Integration Testing',
       'Accessibility Auditing',
       'Performance Profiling',
       'Core Web Vitals',
+      'Observability',
     ],
-    technologies: ['Playwright', 'Jest', 'Vitest', 'Testing Library', 'Lighthouse', 'Axe', 'Sentry', 'Chrome DevTools'],
-    titleLines: ['Testing and', 'Performance'],
+    technologies: ['Playwright', 'Vitest', 'Lighthouse', 'Sentry'],
+    titleLines: ['Testing'],
   },
-  'Collaboration and Planning': {
+  CMS: {
+    capabilities: ['Headless CMS Integration', 'Content Modeling', 'Editorial Workflows', 'Theming'],
+    technologies: ['Strapi', 'WordPress', 'WooCommerce'],
+    titleLines: ['CMS'],
+  },
+  Collaboration: {
     capabilities: [
       'Agile & Scrum',
       'Cross-Functional Leadership',
@@ -96,7 +145,7 @@ export const SKILLS_DATA: Record<SkillCategoryKey, SkillCategoryData> = {
       'Code Review Practices',
       'Stakeholder Communication',
     ],
-    technologies: ['Jira', 'Confluence', 'Notion', 'Linear', 'GitHub', 'Slack', 'Loom'],
-    titleLines: ['Collaboration', 'and Planning'],
+    technologies: ['Jira', 'Confluence', 'Azure DevOps', 'Notion', 'GitHub', 'Microsoft Teams', 'Slack'],
+    titleLines: ['Collaboration'],
   },
-} as const;
+};

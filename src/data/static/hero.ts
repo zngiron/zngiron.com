@@ -1,7 +1,7 @@
 export const HERO = {
   number: '001',
   title: 'Identity',
-  role: 'Front-End Developer / UX Designer',
+  role: 'Senior Front-End Developer | Senior UX Designer',
   image: {
     src: '/static/zngiron-portrait.png',
     alt: 'Ziedrick Ruen Giron',
@@ -15,6 +15,6 @@ export const HERO = {
 export const HERO_NAMES = ['Ziedrick', 'Ruen', 'Giron'] as const;
 
 export const HERO_STATS = [
-  { label: 'Professional Experience', value: '15+ Years', animatedNumber: 15, suffix: '+ Years' },
-  { label: 'Location', value: 'Philippines' },
+  { label: 'Professional Experience', value: '17 Years', animatedNumber: 17, suffix: ' Years' },
+  { label: 'Location', value: 'Manila, Philippines' },
 ] as const;
