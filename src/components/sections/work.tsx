@@ -9,17 +9,14 @@ import { ArrowUpRight, Minus, Plus } from 'lucide-react';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 
 import { Label } from '@/components/common/label';
-import { Badge } from '@/components/ui/badge';
 
 import { createStaggerContainer, fadeUpVariants } from '@/lib/motion';
 import { cn } from '@/lib/utils';
 
 import { PORTFOLIO, PORTFOLIO_DATA } from '@/data/static/portfolio';
 
-const ROW_GRID = cn('grid items-center gap-x-6 px-6', 'grid-cols-[60px_2fr_1.5fr_2.5fr_1.5fr_48px]');
-
 const subItemVariants: Variants = {
-  hidden: { opacity: 0, y: 10 },
+  hidden: { opacity: 0, y: 8 },
   show: {
     opacity: 1,
     y: 0,
@@ -27,15 +24,15 @@ const subItemVariants: Variants = {
   },
 };
 
-const container = createStaggerContainer(0.04);
-
 const subItemStagger: Variants = {
   hidden: { opacity: 0 },
-  show: { opacity: 1, transition: { staggerChildren: 0.05 } },
+  show: { opacity: 1, transition: { staggerChildren: 0.04 } },
 };
 
+const container = createStaggerContainer(0.04);
+
 export function Work(): ReactElement {
-  const [expandedId, setExpandedId] = useState<string | null>('freelance');
+  const [expandedId, setExpandedId] = useState<string | null>(PORTFOLIO_DATA[0]?.id ?? null);
   const shouldReduceMotion = useReducedMotion();
 
   const handleToggle = (id: string): void => {
@@ -43,8 +40,6 @@ export function Work(): ReactElement {
   };
 
   const handleKeyDown = useCallback((event: ReactKeyboardEvent<HTMLButtonElement>, index: number): void => {
-    const id = event.currentTarget.id;
-    const prefix = id.startsWith('work-trigger-mobile-') ? 'work-trigger-mobile-' : 'work-trigger-';
     let targetIndex = -1;
 
     if (event.key === 'ArrowDown') {
@@ -62,7 +57,7 @@ export function Work(): ReactElement {
     }
 
     if (targetIndex >= 0) {
-      const target = document.getElementById(`${prefix}${PORTFOLIO_DATA[targetIndex].id}`);
+      const target = document.getElementById(`work-trigger-${PORTFOLIO_DATA[targetIndex].id}`);
       target?.focus();
     }
   }, []);
@@ -70,53 +65,61 @@ export function Work(): ReactElement {
   return (
     <section
       id="work"
-      className="relative min-h-[900px] w-full [content-visibility:auto] [contain-intrinsic-size:0_56.25rem]"
+      className="relative w-full [content-visibility:auto] [contain-intrinsic-size:0_56.25rem]"
     >
-      <div className={cn('relative z-10', 'flex min-h-[900px] w-full flex-col items-start justify-center')}>
+      <div className={cn('relative z-10 flex w-full flex-col items-start')}>
+        {/* Section header — catalog spread */}
         <motion.div
-          className="flex w-full items-start justify-between p-6"
+          className="flex w-full flex-col gap-4 px-6 pt-10 pb-6"
           variants={container}
           initial="hidden"
           whileInView="show"
           viewport={{ once: true, margin: '-100px' }}
         >
-          <motion.div variants={fadeUpVariants}>
+          <motion.div
+            variants={fadeUpVariants}
+            className="flex items-start justify-between gap-4"
+          >
             <Label
               number={PORTFOLIO.number}
               title={PORTFOLIO.title}
             />
+            <div className="flex flex-col items-end gap-1">
+              <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-foreground">
+                {PORTFOLIO.badge}
+              </span>
+              <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
+                {PORTFOLIO_DATA.length} entries
+              </span>
+            </div>
           </motion.div>
-          <motion.div variants={fadeUpVariants}>
-            <Badge
-              variant="secondary"
-              className="rounded-none"
-            >
-              {PORTFOLIO.badge}
-            </Badge>
-          </motion.div>
+
+          <motion.p
+            variants={fadeUpVariants}
+            className="max-w-2xl font-display text-[clamp(1.5rem,3vw,2.25rem)] font-light italic leading-tight tracking-tight text-foreground"
+          >
+            A chronological catalog of every engagement — employers, retainers, and freelance briefs.
+          </motion.p>
         </motion.div>
 
+        {/* Catalog rows */}
         <div className="w-full border-t border-border">
-          <div className={cn(ROW_GRID, 'hidden border-b border-border py-3 bg-background text-foreground md:grid')}>
-            <p className="text-xs font-medium">No.</p>
-            <p className="text-xs font-medium">Client</p>
-            <p className="text-xs font-medium">Industry</p>
-            <p className="text-xs font-medium">Role</p>
-            <p className="text-xs font-medium">Year</p>
+          {/* Desktop column header */}
+          <div className="hidden w-full grid-cols-[80px_2.5fr_1.5fr_2fr_1.2fr_60px] items-center gap-x-6 border-b border-border bg-background px-6 py-2.5 md:grid">
+            <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Cat. No.</span>
+            <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Client</span>
+            <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Industry</span>
+            <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Role</span>
+            <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Year</span>
+            <span />
           </div>
 
-          <div
-            className={cn(
-              'flex items-center justify-between border-b border-border px-6 py-3',
-              'bg-background text-foreground',
-              'md:hidden',
-            )}
-          >
-            <div className="flex items-center gap-4">
-              <p className="text-xs font-medium">No.</p>
-              <p className="text-xs font-medium">Client</p>
-            </div>
-            <p className="text-xs font-medium">Year</p>
+          {/* Mobile column header */}
+          <div className="flex w-full items-center justify-between border-b border-border bg-background px-6 py-2.5 md:hidden">
+            <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
+              Cat. · Client
+            </span>
+            <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Year</span>
           </div>
 
           <motion.div
@@ -129,7 +132,7 @@ export function Work(): ReactElement {
               const isExpanded = expandedId === entry.id;
               const panelId = `work-panel-${entry.id}`;
               const triggerId = `work-trigger-${entry.id}`;
-              const triggerMobileId = `work-trigger-mobile-${entry.id}`;
+              const catNo = `W-${String(entryIndex + 1).padStart(2, '0')}`;
 
               return (
                 <motion.div
@@ -148,12 +151,12 @@ export function Work(): ReactElement {
                     }
                     transition={{ type: 'spring', stiffness: 400, damping: 30 }}
                   >
+                    {/* Desktop trigger row */}
                     <button
                       id={triggerId}
                       type="button"
                       className={cn(
-                        ROW_GRID,
-                        'hidden w-full py-5',
+                        'hidden w-full grid-cols-[80px_2.5fr_1.5fr_2fr_1.2fr_60px] items-center gap-x-6 px-6 py-5',
                         'cursor-pointer text-left',
                         'focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring',
                         'md:grid',
@@ -163,11 +166,18 @@ export function Work(): ReactElement {
                       onClick={() => handleToggle(entry.id)}
                       onKeyDown={(e) => handleKeyDown(e, entryIndex)}
                     >
-                      <span className="text-xs leading-4">{entry.number}</span>
-                      <span className="text-xs leading-4">{entry.client}</span>
-                      <span className="text-xs leading-4">{entry.industry}</span>
-                      <span className="text-xs leading-4">{entry.role}</span>
-                      <span className="text-xs leading-4">{entry.year}</span>
+                      <span className="font-mono text-[11px] uppercase tracking-[0.15em] tabular-nums">{catNo}</span>
+                      <span
+                        className={cn(
+                          'font-display text-2xl font-light leading-tight tracking-tight',
+                          isExpanded && 'italic',
+                        )}
+                      >
+                        {entry.client}
+                      </span>
+                      <span className="font-mono text-[11px] uppercase tracking-wide">{entry.industry}</span>
+                      <span className="text-xs leading-tight">{entry.role}</span>
+                      <span className="font-mono text-[11px] tabular-nums">{entry.year}</span>
                       <span className="flex justify-end">
                         <motion.span
                           animate={{ rotate: isExpanded ? 180 : 0 }}
@@ -190,11 +200,11 @@ export function Work(): ReactElement {
                       </span>
                     </button>
 
+                    {/* Mobile trigger row */}
                     <button
-                      id={triggerMobileId}
                       type="button"
                       className={cn(
-                        'flex w-full min-h-[56px] items-center justify-between px-6 py-4',
+                        'flex w-full min-h-16 items-center justify-between gap-3 px-6 py-4',
                         'cursor-pointer text-left',
                         'focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring',
                         'md:hidden',
@@ -204,12 +214,21 @@ export function Work(): ReactElement {
                       onClick={() => handleToggle(entry.id)}
                       onKeyDown={(e) => handleKeyDown(e, entryIndex)}
                     >
-                      <div className="flex min-w-0 items-center gap-3">
-                        <span className="shrink-0 text-xs leading-4">{entry.number}</span>
-                        <span className="truncate text-xs leading-4">{entry.client}</span>
+                      <div className="flex min-w-0 items-baseline gap-3">
+                        <span className="shrink-0 font-mono text-[10px] uppercase tracking-[0.15em] tabular-nums">
+                          {catNo}
+                        </span>
+                        <span
+                          className={cn(
+                            'truncate font-display text-xl font-light leading-tight tracking-tight',
+                            isExpanded && 'italic',
+                          )}
+                        >
+                          {entry.client}
+                        </span>
                       </div>
                       <div className="flex shrink-0 items-center gap-3">
-                        <span className="text-xs leading-4">{entry.year}</span>
+                        <span className="font-mono text-[10px] tabular-nums">{entry.year}</span>
                         <motion.span
                           animate={{ rotate: isExpanded ? 180 : 0 }}
                           transition={
@@ -250,106 +269,67 @@ export function Work(): ReactElement {
                                 }
                           }
                         >
-                          <div className="hidden md:block">
-                            <div className={cn(ROW_GRID, 'py-2')}>
-                              <div />
-                              <p className="opacity-50 text-xs leading-4">Project</p>
-                              <p className="opacity-50 text-xs leading-4">Details</p>
-                              <p className="opacity-50 text-xs leading-4">Category</p>
-                              <div />
-                              <div />
-                            </div>
-
+                          <motion.div
+                            initial="hidden"
+                            animate="show"
+                            variants={subItemStagger}
+                            className={cn(
+                              'grid grid-cols-1 gap-3 px-6 pb-6',
+                              'md:grid-cols-[80px_1fr] md:gap-x-6 md:px-6',
+                            )}
+                          >
                             <motion.div
-                              initial="hidden"
-                              animate="show"
+                              variants={subItemVariants}
+                              className="hidden md:block"
+                            >
+                              <span className="font-mono text-[10px] uppercase tracking-[0.2em] opacity-50">
+                                /entries
+                              </span>
+                              <p className="mt-1 font-mono text-[10px] opacity-50 tabular-nums">
+                                {entry.projects.length} items
+                              </p>
+                            </motion.div>
+
+                            <motion.ul
                               variants={subItemStagger}
+                              className="flex flex-col"
                             >
                               {entry.projects.map((project, projectIndex) => (
-                                <motion.div
+                                <motion.li
                                   key={`${entry.id}-${projectIndex}-${project.name}`}
                                   variants={subItemVariants}
-                                  className={cn(ROW_GRID, 'py-2.5 cursor-default')}
-                                  whileHover={{
-                                    backgroundColor: 'color-mix(in oklch, var(--background) 10%, transparent)',
-                                  }}
-                                  transition={{ duration: 0.15 }}
+                                  className={cn(
+                                    'group grid grid-cols-[24px_1fr] items-baseline gap-x-3 py-2.5',
+                                    'md:grid-cols-[40px_2fr_1.5fr_1fr] md:gap-x-6',
+                                    projectIndex < entry.projects.length - 1 &&
+                                      'border-b border-dashed border-current/20',
+                                  )}
                                 >
-                                  <div />
-                                  <p className="text-xs font-medium leading-4">{project.name}</p>
-                                  <p className="text-xs leading-4">{project.details}</p>
-                                  <div className="flex flex-wrap gap-1.5">
-                                    {project.tags.map((tag) => (
-                                      <Badge
+                                  <span className="font-mono text-[10px] tabular-nums opacity-60">
+                                    .{String(projectIndex + 1).padStart(2, '0')}
+                                  </span>
+                                  <span className="font-display text-lg font-light leading-tight tracking-tight">
+                                    {project.name}
+                                  </span>
+                                  <span className="text-[11px] leading-snug opacity-70 md:text-xs">
+                                    {project.details}
+                                  </span>
+                                  <span className="hidden items-center justify-end gap-3 md:flex">
+                                    {project.tags.slice(0, 3).map((tag) => (
+                                      <span
                                         key={tag}
-                                        variant={isExpanded ? 'secondary' : 'default'}
-                                        className="rounded-lg text-[11px]"
+                                        className="font-mono text-[10px] uppercase tracking-wide opacity-70"
                                       >
                                         {tag}
-                                      </Badge>
+                                      </span>
                                     ))}
-                                  </div>
-                                  <div>
                                     {project.link && (
                                       <a
                                         href={project.link}
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className={cn(
-                                          'opacity-70',
-                                          'inline-flex items-center gap-1.5',
-                                          'text-xs leading-4',
-                                          'hover:opacity-100',
-                                          'focus-visible:outline-2 focus-visible:outline-ring',
-                                        )}
-                                        aria-label={`View ${project.name} project`}
-                                      >
-                                        <ArrowUpRight
-                                          className="size-3.5"
-                                          aria-hidden="true"
-                                        />
-                                        View Project
-                                      </a>
-                                    )}
-                                  </div>
-                                  <div />
-                                </motion.div>
-                              ))}
-                            </motion.div>
-                          </div>
-
-                          <div className="px-6 md:hidden">
-                            <div className="opacity-50 flex flex-wrap gap-x-4 gap-y-1 pb-3">
-                              <p className="text-xs leading-4">{entry.role}</p>
-                              <p className="text-xs leading-4">{entry.industry}</p>
-                            </div>
-
-                            <motion.div
-                              initial="hidden"
-                              animate="show"
-                              variants={subItemStagger}
-                              className="flex flex-col gap-3"
-                            >
-                              {entry.projects.map((project, projectIndex) => (
-                                <motion.div
-                                  key={`${entry.id}-${projectIndex}-${project.name}`}
-                                  variants={subItemVariants}
-                                  className="border-t border-current/10 pt-3 first:border-0 first:pt-0"
-                                >
-                                  <div className="flex items-start justify-between gap-3 mb-1.5">
-                                    <p className="text-xs font-medium leading-4">{project.name}</p>
-                                    {project.link && (
-                                      <a
-                                        href={project.link}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className={cn(
-                                          'opacity-70',
-                                          'shrink-0 inline-flex items-center gap-1',
-                                          'text-[11px]',
-                                          'hover:opacity-100',
-                                        )}
-                                        aria-label={`View ${project.name} project`}
+                                        className="inline-flex items-center gap-1 font-mono text-[10px] uppercase tracking-wide opacity-80 hover:opacity-100"
+                                        aria-label={`View ${project.name}`}
                                       >
                                         <ArrowUpRight
                                           className="size-3"
@@ -358,23 +338,38 @@ export function Work(): ReactElement {
                                         View
                                       </a>
                                     )}
-                                  </div>
-                                  <p className="opacity-60 mb-2 text-[11px] leading-relaxed">{project.details}</p>
-                                  <div className="flex flex-wrap gap-1">
-                                    {project.tags.map((tag) => (
-                                      <Badge
+                                  </span>
+
+                                  {/* Mobile-only tags + link */}
+                                  <span className="col-start-2 mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 md:hidden">
+                                    {project.tags.slice(0, 3).map((tag) => (
+                                      <span
                                         key={tag}
-                                        variant={isExpanded ? 'secondary' : 'default'}
-                                        className="rounded-lg px-1.5 py-0 text-[10px]"
+                                        className="font-mono text-[10px] uppercase tracking-wide opacity-70"
                                       >
                                         {tag}
-                                      </Badge>
+                                      </span>
                                     ))}
-                                  </div>
-                                </motion.div>
+                                    {project.link && (
+                                      <a
+                                        href={project.link}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="inline-flex items-center gap-1 font-mono text-[10px] uppercase tracking-wide opacity-80"
+                                        aria-label={`View ${project.name}`}
+                                      >
+                                        <ArrowUpRight
+                                          className="size-3"
+                                          aria-hidden="true"
+                                        />
+                                        View
+                                      </a>
+                                    )}
+                                  </span>
+                                </motion.li>
                               ))}
-                            </motion.div>
-                          </div>
+                            </motion.ul>
+                          </motion.div>
                         </motion.div>
                       )}
                     </AnimatePresence>

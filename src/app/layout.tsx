@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from 'next';
 import type { ReactElement } from 'react';
 
-import { Geist, Geist_Mono } from 'next/font/google';
+import { Fraunces, Geist, Geist_Mono } from 'next/font/google';
 
 import { ButtonBackToTop } from '@/components/common/button-back-to-top';
 import { GridBackground } from '@/components/common/grid';
@@ -25,6 +25,14 @@ const mono = Geist_Mono({
   display: 'swap',
   variable: '--font-mono',
   weight: ['500', '700'],
+  subsets: ['latin'],
+});
+
+const display = Fraunces({
+  display: 'swap',
+  variable: '--font-display',
+  weight: ['300', '400', '500', '600', '700'],
+  style: ['normal', 'italic'],
   subsets: ['latin'],
 });
 
@@ -78,7 +86,15 @@ function RootLayout({ children }: LayoutProps<'/'>): ReactElement {
       lang="en"
       suppressHydrationWarning
     >
-      <body className={cn(sans.variable, mono.variable, 'flex min-h-dvh flex-col', 'font-sans antialiased')}>
+      <body
+        className={cn(
+          sans.variable,
+          mono.variable,
+          display.variable,
+          'flex min-h-dvh flex-col',
+          'font-sans antialiased',
+        )}
+      >
         <a
           href="#hero"
           className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-100 focus:inline-flex focus:h-9 focus:items-center focus:rounded-md focus:bg-primary focus:px-4 focus:text-sm focus:font-medium focus:text-primary-foreground"
