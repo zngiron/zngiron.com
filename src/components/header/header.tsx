@@ -11,7 +11,7 @@ import {
   sectionIds,
 } from "./nav-items";
 import { useActiveSection } from "./use-active-section";
-import { useScramble } from "./use-scramble";
+import { GLYPHS, useScramble } from "./use-scramble";
 
 // Smooth ease-in-out. Width grows less than height, so the morph reads as a
 // mostly-vertical unfold with a slight sideways spread.
@@ -19,7 +19,6 @@ const EASE = [0.65, 0, 0.35, 1] as const;
 const WIDTH_COLLAPSED = 224; // w-56
 const WIDTH_EXPANDED = 384; // w-96
 const MORPH_DURATION = 0.5;
-const LABEL_POOL = "abcdefghijklmnopqrstuvwxyz_";
 
 function NavRow({
   item,
@@ -35,7 +34,7 @@ function NavRow({
   const [active, setActive] = useState(false);
   // Both label and index decode on hover/focus; letters for the word, digits
   // for the number.
-  const label = useScramble(item.label, active, !reduceMotion, LABEL_POOL);
+  const label = useScramble(item.label, active, !reduceMotion, GLYPHS);
   const index = useScramble(item.index, active, !reduceMotion);
 
   return (
@@ -80,7 +79,7 @@ function ConnectRow({
   reduceMotion: boolean;
 }) {
   const [active, setActive] = useState(false);
-  const label = useScramble(item.label, active, !reduceMotion, LABEL_POOL);
+  const label = useScramble(item.label, active, !reduceMotion, GLYPHS);
 
   return (
     <li>
