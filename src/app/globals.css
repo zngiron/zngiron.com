@@ -1,26 +1,60 @@
 @import "tailwindcss";
 
+@theme {
+  /* Monochrome chrome — color enters only through the work. Design doc §5. */
+  --color-bg: #f4f3ef;
+  --color-ink: #0f0f0f;
+  --color-mute: #8a8a83;
+  --color-line: #dcdbd3;
+  --color-accent: #e4322b;
+  --color-panel: #111113;
+  --color-panel-ink: #e9e7e1;
+
+  --font-sans: var(--font-general-sans);
+  --font-mono: var(--font-jetbrains-mono);
+
+  /* Terminal cursor blink (hard on/off). */
+  --animate-blink: blink 1s infinite;
+}
+
+@keyframes blink {
+  0%,
+  50% {
+    opacity: 1;
+  }
+  50.01%,
+  100% {
+    opacity: 0;
+  }
+}
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  color-scheme: light;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+[data-theme="dark"] {
+  --color-bg: #0c0c0d;
+  --color-ink: #e9e7e1;
+  --color-mute: #6f6d68;
+  --color-line: #26262a;
+  /* panel + accent stay constant across themes */
+  color-scheme: dark;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+html {
+  scroll-behavior: smooth;
+  /* clear the fixed pill so anchor targets aren't hidden under it */
+  scroll-padding-top: 5.5rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
   }
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-bg);
+  color: var(--color-ink);
+  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
 }
