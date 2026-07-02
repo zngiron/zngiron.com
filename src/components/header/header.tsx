@@ -41,7 +41,27 @@ function NavRow({
     <li>
       <a
         href={item.href}
-        onClick={onSelect}
+        // Close the menu FIRST, then navigate on the next frame: the close
+        // render (AnimatePresence exit) in the same tick as a fragment
+        // navigation cancels the browser's smooth scroll — the hash updated
+        // but the page never moved. location.hash keeps native semantics
+        // (scroll-padding, :target, CSS reduced-motion override); the
+        // same-hash branch re-scrolls where a hash assignment would no-op.
+        onClick={(e) => {
+          e.preventDefault();
+          onSelect();
+          requestAnimationFrame(() =>
+            requestAnimationFrame(() => {
+              if (window.location.hash === item.href) {
+                document.getElementById(item.id)?.scrollIntoView({
+                  behavior: reduceMotion ? "auto" : "smooth",
+                });
+              } else {
+                window.location.hash = item.href;
+              }
+            }),
+          );
+        }}
         onMouseEnter={() => setActive(true)}
         onMouseLeave={() => setActive(false)}
         onFocus={() => setActive(true)}
@@ -127,6 +147,12 @@ export function Header() {
   const triggerRef = useRef<HTMLButtonElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
   const wasOpen = useRef(false);
+  // True when the menu closes because a nav link was activated. Returning
+  // focus to the trigger in that case cancels the browser's in-progress
+  // smooth scroll to the anchor (focus() interrupts fragment scrolling), so
+  // the page never moved. On navigation the browser owns focus (it moves the
+  // sequential-focus start to the target); focus-return stays for Esc/backdrop.
+  const closedByNavigation = useRef(false);
 
   // Esc closes.
   useEffect(() => {
@@ -148,7 +174,9 @@ export function Header() {
     return () => root.removeAttribute("data-menu-open");
   }, [open]);
 
-  // Move focus into the menu on open; return it to the trigger on close.
+  // Move focus into the menu on open; return it to the trigger on close —
+  // except when the close came from activating a nav link (see
+  // closedByNavigation above).
   useEffect(() => {
     if (open) {
       const id = requestAnimationFrame(() => {
@@ -157,7 +185,10 @@ export function Header() {
       wasOpen.current = true;
       return () => cancelAnimationFrame(id);
     }
-    if (wasOpen.current) triggerRef.current?.focus();
+    if (wasOpen.current && !closedByNavigation.current) {
+      triggerRef.current?.focus();
+    }
+    closedByNavigation.current = false;
     wasOpen.current = false;
   }, [open]);
 
@@ -293,7 +324,10 @@ export function Header() {
                         item={item}
                         isActive={activeId === item.id}
                         reduceMotion={reduceMotion ?? false}
-                        onSelect={() => setOpen(false)}
+                        onSelect={() => {
+                          closedByNavigation.current = true;
+                          setOpen(false);
+                        }}
                       />
                     ))}
                   </ul>
