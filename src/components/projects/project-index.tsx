@@ -81,14 +81,16 @@ export function ProjectIndex() {
   return (
     <div>
       {/* Type filters — inline mono text links with live counts. */}
-      <fieldset className="flex flex-wrap gap-x-5 gap-y-2 border-0 font-mono text-xs">
+      {/* py-2/-my-1 grows each button's touch target without moving the
+          text; gap-y-3 keeps the extended hit areas from overlapping. */}
+      <fieldset className="flex flex-wrap gap-x-5 gap-y-3 border-0 font-mono text-xs">
         <legend className="sr-only">Filter projects by type</legend>
         <button
           type="button"
           onClick={() => setActiveType(null)}
           aria-pressed={activeType === null}
           className={cn(
-            "cursor-pointer rounded-sm transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent",
+            "-my-1 cursor-pointer rounded-sm py-2 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent",
             activeType === null ? "text-ink" : "text-mute hover:text-ink",
           )}
         >
@@ -102,7 +104,7 @@ export function ProjectIndex() {
             onClick={() => setActiveType(type)}
             aria-pressed={activeType === type}
             className={cn(
-              "cursor-pointer rounded-sm transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent",
+              "-my-1 cursor-pointer rounded-sm py-2 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent",
               activeType === type ? "text-ink" : "text-mute hover:text-ink",
             )}
           >

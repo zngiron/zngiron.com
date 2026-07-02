@@ -105,7 +105,7 @@ export function ContactSection() {
           <p className="font-mono text-[10px] tracking-[0.2em] text-mute uppercase">
             connect<span className="text-ink">_</span>
           </p>
-          <ul className="mt-3 flex flex-wrap gap-x-8 gap-y-2">
+          <ul className="mt-2 flex flex-wrap gap-x-8 gap-y-3">
             {connectLinks.map((link) => (
               <li key={link.label}>
                 <a
@@ -113,7 +113,7 @@ export function ContactSection() {
                   {...(link.kind === "external"
                     ? { target: "_blank", rel: "noopener noreferrer" }
                     : { download: true })}
-                  className="group inline-flex items-center gap-1.5 rounded-sm font-mono text-sm text-mute transition-colors hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+                  className="group inline-flex items-center gap-1.5 rounded-sm py-2 font-mono text-sm text-mute transition-colors hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
                 >
                   {link.label}
                   {link.kind === "external" ? (
@@ -140,7 +140,7 @@ export function ContactSection() {
           </p>
           <a
             href="#top"
-            className="inline-flex items-center gap-1 transition-colors hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+            className="-my-2 inline-flex items-center gap-1 py-2 transition-colors hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
           >
             back to 001
             <ArrowUpIcon size={11} weight="thin" />

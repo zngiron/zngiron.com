@@ -65,7 +65,7 @@ export function ThemeToggle() {
       aria-keyshortcuts="t"
       title={isDark ? "Switch to light theme (T)" : "Switch to dark theme (T)"}
       suppressHydrationWarning
-      className="fixed top-4 right-4 z-50 inline-flex h-9 cursor-pointer items-center gap-2 rounded-full border border-line bg-bg px-3 text-mute transition-colors hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+      className="fixed top-4 right-4 z-50 inline-flex h-10 cursor-pointer items-center gap-2 rounded-full border border-line bg-bg px-3 text-mute transition-colors hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
     >
       <span className="relative grid size-4 place-items-center">
         {mounted ? (

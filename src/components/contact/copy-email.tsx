@@ -30,7 +30,7 @@ export function CopyEmail({ email }: { email: string }) {
     <button
       type="button"
       onClick={copy}
-      className="cursor-pointer rounded-sm font-mono text-xs text-mute transition-colors hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+      className="-m-2 cursor-pointer rounded-sm p-2 font-mono text-xs text-mute transition-colors hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
     >
       <span aria-live="polite">
         {copied ? "$ copied to clipboard" : "[ copy ]"}
