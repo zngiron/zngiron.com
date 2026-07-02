@@ -23,7 +23,7 @@ export function WorkCard({ featured }: { featured: FeaturedProject }) {
         className="group block focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent"
         aria-label={`${project.brand} — ${project.project}${external ? " (opens live site)" : ""}`}
       >
-        <div className="relative aspect-[16/10] overflow-hidden border border-line">
+        <div className="relative aspect-16/10 overflow-hidden border border-line">
           <Image
             src={image}
             alt={`${project.brand} ${project.project} — interface screenshot`}

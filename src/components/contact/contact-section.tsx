@@ -41,7 +41,7 @@ function ContactHeadline({ ghost = false }: { ghost?: boolean }) {
         </p>
       </div>
 
-      <h2 className="mt-10 text-5xl font-semibold tracking-tight sm:text-7xl">
+      <h2 className="mt-10 text-5xl font-semibold tracking-tight text-balance sm:text-7xl">
         Fill in the blank
         <span
           className={

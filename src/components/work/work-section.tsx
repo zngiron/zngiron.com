@@ -48,7 +48,7 @@ export function WorkSection() {
             <a
               href="#projects"
               data-work-card=""
-              className="group flex aspect-[16/10] flex-col justify-between border border-line p-6 transition-colors hover:border-mute focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent"
+              className="group flex aspect-16/10 flex-col justify-between border border-line p-6 transition-colors hover:border-mute focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent"
             >
               <p className="font-mono text-xs text-mute">
                 <span aria-hidden="true">$</span> open index

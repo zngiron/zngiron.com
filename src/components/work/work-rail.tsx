@@ -70,7 +70,7 @@ export function WorkRail({ children }: { children: ReactNode }) {
           scrollByCard(-1);
         }
       }}
-      className="-mx-6 sm:-mx-12 snap-x snap-mandatory overflow-x-auto scroll-px-6 px-6 sm:scroll-px-12 sm:px-12 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent"
+      className="-mx-6 sm:-mx-12 snap-x snap-mandatory overflow-x-auto scroll-px-6 px-6 sm:scroll-px-12 sm:px-12 scrollbar-none [&::-webkit-scrollbar]:hidden focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent"
     >
       <ul className="flex w-max gap-6 pb-2">{children}</ul>
     </section>

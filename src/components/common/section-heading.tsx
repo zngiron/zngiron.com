@@ -27,7 +27,7 @@ export function SectionHeading({
         <p className="font-mono text-xs tracking-wide text-mute">
           {index}_{id}
         </p>
-        <h2 className="text-3xl font-medium tracking-tight sm:text-4xl">
+        <h2 className="text-3xl font-medium tracking-tight text-balance sm:text-4xl">
           {title}
         </h2>
       </div>
