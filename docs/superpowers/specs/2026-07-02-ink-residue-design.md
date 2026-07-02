@@ -16,12 +16,19 @@ blots at rest.
 Two spawn paths feed one particle system:
 
 1. **Shed while moving.** While the pointer moves, spawn one small droplet
-   (16–40px, random) every 150–250ms. Spawn position is the **tail** of the
+   (44–68px, random) every 150–250ms. Spawn position is the **tail** of the
    blob chain (the laggiest spring's current x/y), so the goo filter visually
    pinches the droplet off the stream rather than popping it in.
 2. **Break-off on idle retract.** When the idle timer fires and the main blot
-   begins its 2.6s retract, spawn 2–4 larger droplets (28–64px) scattered
+   begins its 2.6s retract, spawn 2–4 larger droplets (56–88px) scattered
    within ~40px of the resting point.
+
+Sizes are bounded from below by the goo filter's hardening limit: the 18px
+Gaussian blur + alpha threshold (`19a − 9`, cutoff ≈ 0.47) cannot re-harden
+disks under ~41px diameter — they never cross the threshold and render as
+semi-transparent blur haze. All residue must spawn above that limit, and the
+dissolve holds near-full scale for ~75% of life before collapsing so the
+sub-threshold blur phase stays brief.
 
 Once detached, every droplet:
 
