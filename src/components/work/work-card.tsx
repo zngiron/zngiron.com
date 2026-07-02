@@ -47,7 +47,12 @@ export function WorkCard({ featured }: { featured: FeaturedProject }) {
           </div>
           <div className="flex shrink-0 items-center gap-2 pt-1">
             {tag && (
-              <span className="font-mono text-xs text-accent">{tag}</span>
+              // Mute, not accent: red is capped at the brand cursor +
+              // availability status, and must never compete with the work's
+              // color (DESIGN.md §Color).
+              <span className="font-mono text-xs text-mute transition-colors group-hover:text-ink group-focus-visible:text-ink">
+                {tag}
+              </span>
             )}
             {external && (
               <ArrowUpRightIcon
