@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import { JetBrains_Mono } from "next/font/google";
 import localFont from "next/font/local";
+import { InkTrail } from "@/components/common/ink-trail";
 import { Header } from "@/components/header/header";
+import { ThemeToggle } from "@/components/theme/theme-toggle";
 import "./globals.css";
 
 const generalSans = localFont({
@@ -41,11 +43,38 @@ export default function RootLayout({
     <html
       lang="en"
       data-theme="light"
+      suppressHydrationWarning
       className={`${generalSans.variable} ${jetbrainsMono.variable} h-full antialiased`}
     >
+      <head>
+        <script
+          // Applies the persisted/system theme before first paint (no flash).
+          // stored -> system -> light. See DESIGN.md §Color.
+          // biome-ignore lint/security/noDangerouslySetInnerHtml: Next.js no-flash pattern
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var t=localStorage.getItem("theme");if(!t)t=matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light";document.documentElement.setAttribute("data-theme",t)}catch(e){}})()`,
+          }}
+        />
+      </head>
       <body className="min-h-full flex flex-col bg-bg text-ink font-sans">
         <Header />
+        {/* Standalone theme switcher, upper-right corner. Click or press T. */}
+        <ThemeToggle />
         {children}
+        {/* Master ink trail: ONE global inverted goo blob for the whole page.
+            Mounted last and at z-60 (> the header's z-50) so it sits above every
+            layer — header, hero, and each section all react to the same pointer.
+            Its mix-blend-difference blends against the full composited page, so
+            inversion is uniform everywhere (this replaced the old split
+            hero + pill-scoped trails). Red underscores are branding and opt out
+            via pixel-identical ghosts above the trail (z-70): the hero identity
+            ghost (page.tsx) and the logo-underscore ghost (header.tsx). Hidden
+            during theme switches and while the menu is open via [data-ink-trail]
+            rules in globals.css. */}
+        <InkTrail
+          filterId="trail-goo"
+          className="pointer-events-none fixed inset-0 z-60"
+        />
       </body>
     </html>
   );

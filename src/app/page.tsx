@@ -1,16 +1,15 @@
 import { GridBackground } from "@/components/common/grid";
-import { CursorTrail } from "@/components/hero/cursor-trail";
 import { IdentityReadout } from "@/components/hero/identity-readout";
 import { PortraitLineArt } from "@/components/hero/portrait-lineart";
 import { cn } from "@/lib/utils";
 
-// Hero (001_identity): breathing grid + organic inverted ink trail. The line-art
-// portrait fills the left columns (1–5) near full height; the identity readout
-// sits on the right (cols 7–12). Layering under the trail (z-20): grid, paper,
-// ruler, and the ink identity (z-0/z-10) invert as it passes. The line-art
-// portrait and the ghost identity (z-30) stay above — the portrait reads as a
-// soft theme-aware gray (never inverted) and the red _ never inverts. Native
-// cursor stays visible.
+// Hero (001_identity): breathing grid + identity readout. The single master ink
+// trail lives globally in layout.tsx (z-60, above everything) — this section just
+// lays out the layers it passes over. The line-art portrait fills the left columns
+// (1–5) near full height; the identity readout sits on the right (cols 7–12).
+// Everything here (grid, ruler, portrait, ink identity at z-0/z-10) inverts under
+// the master trail. The lone exception is the red _ ghost (z-70), lifted above the
+// trail so the brand red never inverts. Native cursor stays visible.
 
 const GRID = "grid grid-cols-2 gap-6 px-6 sm:grid-cols-4 lg:grid-cols-12";
 const CONTENT_COL = "col-span-2 sm:col-span-4 lg:col-span-6 lg:col-start-7";
@@ -37,11 +36,10 @@ export default function Home() {
         className="relative flex min-h-screen flex-col justify-between overflow-hidden bg-bg pt-28 pb-8"
       >
         <GridBackground />
-        <CursorTrail />
 
         {/* Portrait line art — left columns (1–5), extends almost to the top.
-            z-10 → sits below the trail, so the ink trail inverts the crisp
-            vector line art like the rest of the UI. */}
+            z-10 → sits below the master trail, so it inverts the crisp vector
+            line art like the rest of the UI. */}
         <div className="pointer-events-none absolute inset-x-0 top-8 bottom-8 z-10 hidden lg:block">
           <div className={cn(GRID, "h-full")}>
             <div className="col-span-5 col-start-1 h-full">
@@ -78,11 +76,12 @@ export default function Home() {
         </div>
 
         {/* Identity ghost layer — overlays the ink layer exactly and contributes
-            only the red underscore, kept above the trail (z-30) so it never
-            inverts. */}
+            only the red underscore, kept above the master trail (z-70 > z-60) so
+            the brand red never inverts. This is the one deliberate opt-out from
+            the otherwise-global inversion. */}
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute inset-x-0 bottom-8 z-30"
+          className="pointer-events-none absolute inset-x-0 bottom-8 z-70"
         >
           <div className={GRID}>
             <div className={CONTENT_COL}>

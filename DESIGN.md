@@ -46,16 +46,16 @@ Monochrome chrome, color from the work. Tokens live in `@theme` in `src/app/glob
 | `mute` | `text-mute` | `#8a8a83` | `#6f6d68` | secondary text, labels |
 | `line` | `border-line` | `#dcdbd3` | `#26262a` | hairlines, dividers |
 | `accent` | `text-accent` | `#e4322b` | `#e4322b` | red — the `_` + status only |
-| `panel` | `bg-panel` | `#111113` | `#111113` | persistent CTA surface (dark in both themes) |
+| `panel` | `bg-panel` | `#111113` | `#111113` | reserved dark surface (currently unused — the CTA moved to inverted chrome, see below) |
 
-> **Inverted chrome:** the header (pill + menu) and any element that should read as the opposite of the page uses the `ink`/`bg` pair (`bg-ink` + `text-bg`). Because `ink` and `bg` swap values across themes, this auto-inverts: dark chrome on light pages, light chrome on dark. Inside inverted surfaces, use `bg`-alpha for hairlines/hovers (`border-bg/15`, `hover:bg-bg/5`), never hardcoded `white/…`.
+> **Inverted chrome:** the header (pill + menu), the hero CTA, and any element that should read as the opposite of the page uses the `ink`/`bg` pair (`bg-ink` + `text-bg`). Because `ink` and `bg` swap values across themes, this auto-inverts: dark chrome on light pages, light chrome on dark. Inside inverted surfaces, use `bg`-alpha for hairlines/hovers (`border-bg/15`, `hover:bg-bg/5`), never hardcoded `white/…`. Do NOT use the constant `panel` for surfaces that must stay visible in both themes — it disappears against the dark page bg (that bug is why the CTA moved to `ink`/`bg`).
 
 > **No shadows.** Separate surfaces with color contrast and hairline borders (`border-line`), not drop shadows. The *only* permitted shadow is a light surface sitting on a light background (white-on-white) where contrast alone can't separate them. Never shadow a dark element on a light page.
 | `panel-ink` | `text-panel-ink` | `#e9e7e1` | `#e9e7e1` | text on panel |
 
 - **Approach:** restrained. Grayscale + a single red.
 - **Red usage rule:** the accent appears in ~2 places only — the `_` cursor and the `[ available ]` status (+ subtle link/hover/focus states). It must **never** compete with the work's color.
-- **Dark mode:** one `data-theme` flip (default `light` on `<html>`). Panel + accent stay constant; only bg/ink/mute/line change. Dark is the "system/terminal" theme — a free peer flex. Toggle UI is not built yet (tokens are wired for it).
+- **Dark mode:** one `data-theme` flip (default `light` on `<html>`). Panel + accent stay constant; only bg/ink/mute/line change. Dark is the "system/terminal" theme — a free peer flex. Toggle is a standalone spec-chip button fixed to the **upper-right corner** (`src/components/theme/theme-toggle.tsx`): sun/moon icon + hairline divider + a visible mono **`T`** kbd hint, bound to the bare **`T` key** (no modifiers; ignored while typing in fields/contenteditable). Switching runs a circular reveal via the View Transitions API — from the click point, or from the button when keyboard-triggered. Initial theme resolves stored → system `prefers-color-scheme` → light, applied pre-paint by a `<head>` inline script (no flash).
 
 ## Spacing
 
@@ -82,12 +82,14 @@ Monochrome chrome, color from the work. Tokens live in `@theme` in `src/app/glob
 - **Library:** `motion` (Framer Motion successor). Menu expand, grayscale→color, scroll reveals.
 - **Menu expand default:** `duration 0.22s`, ease `[0.22, 1, 0.36, 1]` (ease-out), origin-top scale+fade.
 - **Terminal cursor motif:** interactive text (nav items on hover/focus) reveals a blinking red `_` cursor after the label (`animate-blink`, defined in globals.css) — the identity glyph awaiting input. Reduced motion shows it static (no blink). Reuse this for any "awaiting input" affordance.
+- **Master ink trail:** ONE global `InkTrail` (`src/components/common/ink-trail.tsx`, mounted in `layout.tsx` at `z-60`) — a goo-filtered `mix-blend-difference` blob chain following the pointer ABOVE all chrome including the header (`z-50`), so the whole page inverts uniformly under it (dark blot on light, light blot on dark). Never add a second scoped trail — the split-trail approach was tried and reverted (inconsistent inversion). Timings: grow-in `0.6s`, retract `2.6s` after `300ms` idle. It hides (via `<html>` attrs + globals.css) during theme switches (`data-theme-switching`) and while the menu is open (`data-menu-open`).
+- **Red never inverts:** every red `_` is branding and must stay red under the trail. Difference-blend turns accent red cyan, so protected glyphs use pixel-identical **ghost overlays at `z-70`** (above the trail): the hero identity ghost (`page.tsx`) and the header logo-underscore ghost (`header.tsx`, real `_` inherits the pill color while closed). Any new red glyph must either sit above `z-60` or get a ghost.
 - **Reduced motion is non-negotiable:** every animated component honors `prefers-reduced-motion` (`useReducedMotion` or `motion-reduce:`) — opacity-only or instant, and `scroll-behavior: auto`.
 
 ## Iconography
 
 - **Library: Phosphor** (`@phosphor-icons/react`), always `weight="thin"` to match the hairline/underscore aesthetic. Import icons directly (`import { EqualsIcon } from "@phosphor-icons/react"`); `next.config.ts` `optimizePackageImports` tree-shakes to only what's used. Icons inherit `currentColor`, so color them with `text-*` token utilities on the parent. In Server Components import from `@phosphor-icons/react/ssr`.
-- **Current glyphs:** `EqualsIcon` (`=` menu toggle), `XIcon` (close), `ArrowUpRightIcon` (external link), `ArrowDownIcon` (download). Prefer thin-weight Phosphor for any new glyph before hand-rolling SVG.
+- **Current glyphs:** `SunIcon`/`MoonIcon` (theme switcher), `ArrowUpRightIcon` (external link), `ArrowDownIcon` (download). The menu `=`/`x` is two hand-drawn animated bars (motion spans), not an icon. Prefer thin-weight Phosphor for any new glyph before hand-rolling SVG.
 - **Lucide is rejected** (too common). Brand marks (GitHub/LinkedIn/X): simple-icons only if/when needed (Phosphor's brand set is fine too).
 
 ## Accessibility (non-negotiable — it's a UX designer's site)
@@ -126,3 +128,11 @@ Monochrome chrome, color from the work. Tokens live in `@theme` in `src/app/glob
 | 2026-07-01 | General Sans (display/UI) + JetBrains Mono (labels), both self-hosted | Clean neutral grotesk over techy/default options; mono carries the terminal/spec motif; self-host kills font flash. |
 | 2026-07-01 | Nav = centered pill → dark Radix Popover panel; single-page `001–006` anchors, Work at #2 | "Pill + expanded menu" brief; lead with color/proof, not bio; Radix for a11y. |
 | 2026-07-01 | Lowercase kebab-case filenames as project convention | Consistency across every component going forward. |
+| 2026-07-01 | Light/dark toggle = sun/moon glyph in the pill; cursor-origin circular reveal (View Transitions API) | Reachable without opening the menu; the reveal grows from the click, reinforcing the tactile/terminal feel. Native API, no new deps, degrades to instant swap under reduced motion. |
+| 2026-07-01 | ~~Header reacts to the ink blob via a pill-scoped, isolated second `InkTrail`~~ (superseded 2026-07-02) | A single blob can't be both above the header (to invert it) and below the hero's red `_`/portrait (to spare them); an isolated pill-scoped copy resolves the stacking conflict. |
+| 2026-07-01 | Initial theme resolves stored → system → light, applied by a pre-paint `<head>` script | Respects the visitor's OS setting on first load, then their explicit choice; the inline script kills the theme flash. |
+| 2026-07-02 | ONE master `InkTrail` in `layout.tsx` at `z-60`, above the header — supersedes the pill-scoped second trail | Split trails inverted inconsistently (isolated pill vs raw multi-layer composite); a single blob above everything inverts the whole page uniformly. Protected glyphs solve the stacking conflict with `z-70` ghosts instead. |
+| 2026-07-02 | All red underscores protected from inversion via `z-70` ghost overlays | The red `_` is branding; difference-blend turns it cyan. Hero identity ghost + header logo ghost keep it red under the blob in every state. |
+| 2026-07-02 | Hero CTA switched from constant `bg-panel` to inverted chrome (`bg-ink`/`text-bg`) | Panel (`#111113`) was near-invisible against the dark page bg (`#0c0c0d`) — the CTA didn't react to theme. Ink/bg flips with the theme; the type-cursor `▋` stays. Panel token reserved, currently unused. |
+| 2026-07-02 | Theme switcher = standalone upper-right spec-chip (icon + visible `T` hint) + bare `T` shortcut; removed from the pill | Reachable without the menu and without the mouse; the visible kbd hint teaches the shortcut; keyboard toggles originate the circular reveal from the button. Bare key guarded against modifiers and form fields. |
+| 2026-07-02 | Ink-trail timing: grow `0.6s`, retract `2.6s` after `300ms` idle; trail hides while the menu is open | Slower swell reads as ink, not a pop; longer retract retains the blot. Instant hide on menu open is masked by the 0.5s panel morph and guarantees the nav is never obscured. |

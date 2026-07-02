@@ -10,15 +10,13 @@ import {
 } from "motion/react";
 import { useEffect, useRef } from "react";
 
-// Organic inverted ink trail. A dense chain of blobs follows the pointer at a
-// smooth gradient of spring rates, so consecutive blobs overlap and the goo
-// filter melts them into one continuous, fluid ink stream (metaball necks
-// rather than separate circles). mix-blend-difference inverts what's beneath.
-// Idle behavior is an ink retract: reform quick on movement, shrink back to
-// nothing (slow) when the pointer holds still — no opacity fade, the inversion
-// stays full strength until the ink pulls in. z-20 keeps it below the name's
-// red cursor and the portrait (z-30). Native cursor stays visible; reduced
-// motion disables it.
+// Organic inverted ink trail: a dense chain of blobs follows the pointer at a
+// gradient of spring rates so consecutive blobs overlap and the goo filter melts
+// them into one continuous fluid stream. The caller owns positioning + z via
+// `className`; this owns the blend (mix-blend-difference), a uniquely-id'd goo
+// filter, and pointer tracking. Positions are reported in CONTAINER-LOCAL
+// coordinates (client coords minus the container's rect), so the same component
+// works full-viewport (hero) or offset inside the header pill.
 
 const BLOBS = [
   { size: 300, spring: { stiffness: 600, damping: 44 } },
@@ -63,50 +61,70 @@ function Blob({
   );
 }
 
-export function CursorTrail() {
+export function InkTrail({
+  filterId,
+  active = true,
+  className,
+}: {
+  filterId: string;
+  active?: boolean;
+  className?: string;
+}) {
   const reduce = useReducedMotion() ?? false;
+  const containerRef = useRef<HTMLDivElement>(null);
   const x = useMotionValue(-600);
   const y = useMotionValue(-600);
-  // presence 0..1 drives blob scale only. Quick ease-in on the first move
-  // (ink reforms), slow ease-out after the pointer holds still (ink retracts).
+  // presence 0..1 drives blob scale: an eased grow on movement, then a slow
+  // lingering retract on idle so the blot holds its shape a beat before melting.
   const presence = useMotionValue(0);
   const moving = useRef(false);
 
   useEffect(() => {
     if (reduce) return;
+    // Suppressed (e.g. menu open): retract and stop tracking.
+    if (!active) {
+      moving.current = false;
+      animate(presence, 0, { duration: 0.4, ease: [0.4, 0, 0.2, 1] });
+      return;
+    }
     let idle: ReturnType<typeof setTimeout>;
     const onMove = (e: MouseEvent) => {
-      x.set(e.clientX);
-      y.set(e.clientY);
+      const rect = containerRef.current?.getBoundingClientRect();
+      x.set(e.clientX - (rect?.left ?? 0));
+      y.set(e.clientY - (rect?.top ?? 0));
       if (!moving.current) {
         moving.current = true;
-        animate(presence, 1, { duration: 0.35, ease: "easeOut" });
+        // Slower grow-in so the blot swells up rather than popping into place.
+        animate(presence, 1, { duration: 0.6, ease: [0.22, 1, 0.36, 1] });
       }
       clearTimeout(idle);
       idle = setTimeout(() => {
         moving.current = false;
-        animate(presence, 0, { duration: 1.8, ease: [0.4, 0, 0.2, 1] });
-      }, 220);
+        // Longer, gentle retract so the shape lingers before it melts away.
+        animate(presence, 0, { duration: 2.6, ease: [0.4, 0, 0.2, 1] });
+      }, 300);
     };
     window.addEventListener("mousemove", onMove, { passive: true });
     return () => {
       window.removeEventListener("mousemove", onMove);
       clearTimeout(idle);
     };
-  }, [reduce, x, y, presence]);
+  }, [reduce, active, x, y, presence]);
 
   if (reduce) return null;
 
   return (
     <div
+      ref={containerRef}
       aria-hidden="true"
-      className="pointer-events-none fixed inset-0 z-20"
-      style={{ mixBlendMode: "difference", filter: "url(#trail-goo)" }}
+      data-ink-trail=""
+      className={className}
+      style={{ mixBlendMode: "difference", filter: `url(#${filterId})` }}
     >
       <svg className="absolute h-0 w-0">
-        <title>cursor trail filter</title>
+        <title>ink trail filter</title>
         <defs>
-          <filter id="trail-goo">
+          <filter id={filterId}>
             <feGaussianBlur
               in="SourceGraphic"
               stdDeviation="18"

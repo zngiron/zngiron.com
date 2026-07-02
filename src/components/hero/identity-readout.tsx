@@ -62,9 +62,12 @@ export function IdentityReadout({ ghost = false }: { ghost?: boolean }) {
             <span>▋</span>
           </span>
         ) : (
+          // Inverted chrome (bg-ink/text-bg), not the constant bg-panel: panel is
+          // near-identical to the dark page bg, so the CTA vanished in dark mode.
+          // ink/bg swap across themes — dark pill on light, light pill on dark.
           <a
             href="#contact"
-            className="inline-flex items-baseline gap-1 rounded-full bg-panel px-5 py-3 text-sm font-medium text-panel-ink transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+            className="inline-flex items-baseline gap-1 rounded-full bg-ink px-5 py-3 text-sm font-medium text-bg transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
           >
             let&apos;s work together
             <span

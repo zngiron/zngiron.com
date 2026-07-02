@@ -58,3 +58,43 @@ body {
   color: var(--color-ink);
   font-family: var(--font-sans), Arial, Helvetica, sans-serif;
 }
+
+/* Theme switch reveal: the cursor-origin clip-path circle (animated in JS via the
+   Web Animations API) is the only motion — kill the UA default cross-fade so the
+   old theme stays put while the new one circles in over it. */
+/* biome-ignore lint/correctness/noUnknownTypeSelector: valid CSS View Transitions API pseudo-elements, not yet in Biome's registry */
+::view-transition-old(root),
+/* biome-ignore lint/correctness/noUnknownTypeSelector: valid CSS View Transitions API pseudo-elements, not yet in Biome's registry */
+  ::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+/* Keep the pointer ink-trail out of the theme snapshot. As a fixed
+   mix-blend-difference layer it otherwise bakes into the view-transition
+   snapshot as a frozen white goo overlapping the header for the ~500ms reveal.
+   useTheme sets data-theme-switching for the duration; the trail resumes after. */
+html[data-theme-switching] [data-ink-trail] {
+  display: none;
+}
+
+/* Retract the master ink trail while the menu is open — otherwise the page-wide
+   blob roams over the expanded panel and obscures the nav. Header sets
+   data-menu-open on <html> for the duration. */
+html[data-menu-open] [data-ink-trail] {
+  display: none;
+}
+
+/* Logo-underscore ghost timing: it mirrors the COLLAPSED pill only, so hide it
+   the instant the menu opens (the real _ stays red — the trail is hidden too),
+   and bring it back only after the 0.5s close morph settles so it never floats
+   misaligned over the animating pill. */
+[data-logo-ghost] {
+  visibility: visible;
+  transition: visibility 0s 0.55s;
+}
+
+html[data-menu-open] [data-logo-ghost] {
+  visibility: hidden;
+  transition: visibility 0s;
+}
