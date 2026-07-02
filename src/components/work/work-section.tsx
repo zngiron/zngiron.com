@@ -58,7 +58,7 @@ export function WorkSection() {
               </p>
               <p className="flex items-center gap-2 font-mono text-xs text-mute transition-colors group-hover:text-ink group-focus-visible:text-ink">
                 view all {projects.length} projects
-                <ArrowRightIcon size={13} weight="thin" />
+                <ArrowRightIcon aria-hidden="true" size={13} weight="thin" />
               </p>
             </a>
           </li>

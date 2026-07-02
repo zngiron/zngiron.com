@@ -50,6 +50,7 @@ function RowContent({ project, index }: { project: Project; index: number }) {
       <span className="flex justify-end">
         {project.url ? (
           <ArrowUpRightIcon
+            aria-hidden="true"
             size={13}
             weight="thin"
             className="text-mute transition-colors group-hover:text-ink group-focus-visible:text-ink"

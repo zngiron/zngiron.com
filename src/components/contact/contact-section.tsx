@@ -117,9 +117,13 @@ export function ContactSection() {
                 >
                   {link.label}
                   {link.kind === "external" ? (
-                    <ArrowUpRightIcon size={13} weight="thin" />
+                    <ArrowUpRightIcon
+                      aria-hidden="true"
+                      size={13}
+                      weight="thin"
+                    />
                   ) : (
-                    <ArrowDownIcon size={13} weight="thin" />
+                    <ArrowDownIcon aria-hidden="true" size={13} weight="thin" />
                   )}
                 </a>
               </li>
@@ -143,7 +147,7 @@ export function ContactSection() {
             className="-my-2 inline-flex items-center gap-1 py-2 transition-colors hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
           >
             back to 001
-            <ArrowUpIcon size={11} weight="thin" />
+            <ArrowUpIcon aria-hidden="true" size={11} weight="thin" />
           </a>
         </div>
       </footer>

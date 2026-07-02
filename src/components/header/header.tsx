@@ -46,6 +46,9 @@ function NavRow({
         onMouseLeave={() => setActive(false)}
         onFocus={() => setActive(true)}
         onBlur={() => setActive(false)}
+        // Static accessible name — the visible label scrambles through glyph
+        // noise on focus, which would otherwise become the announced name.
+        aria-label={item.label}
         aria-current={isActive ? "location" : undefined}
         className={`group flex items-center justify-between rounded-md py-2 text-2xl font-medium lowercase transition-colors hover:text-bg focus-visible:text-bg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent ${
           isActive ? "text-bg" : "text-bg/55"
@@ -92,17 +95,20 @@ function ConnectRow({
         onMouseLeave={() => setActive(false)}
         onFocus={() => setActive(true)}
         onBlur={() => setActive(false)}
+        aria-label={item.label}
         className="group flex items-center justify-between gap-2 rounded-md py-1.5 font-mono text-sm lowercase text-bg/55 transition-colors hover:text-bg focus-visible:text-bg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
       >
         <span className="truncate">{label}</span>
         {item.kind === "external" ? (
           <ArrowUpRightIcon
+            aria-hidden="true"
             size={13}
             weight="thin"
             className="shrink-0 text-bg/40 transition-colors group-hover:text-bg group-focus-visible:text-bg"
           />
         ) : (
           <ArrowDownIcon
+            aria-hidden="true"
             size={13}
             weight="thin"
             className="shrink-0 text-bg/40 transition-colors group-hover:text-bg group-focus-visible:text-bg"

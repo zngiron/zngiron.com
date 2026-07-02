@@ -56,6 +56,7 @@ export function WorkCard({ featured }: { featured: FeaturedProject }) {
             )}
             {external && (
               <ArrowUpRightIcon
+                aria-hidden="true"
                 size={14}
                 weight="thin"
                 className="text-mute transition-colors group-hover:text-ink group-focus-visible:text-ink"
