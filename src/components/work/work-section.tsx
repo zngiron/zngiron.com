@@ -23,7 +23,12 @@ export function WorkSection() {
           title="Where the color lives."
           meta={
             <span>
-              n={count} / {total} · hover reveals color
+              n={count} / {total}
+              {/* False claim on touch — there, the centered card colors. */}
+              <span className="pointer-coarse:hidden">
+                {" "}
+                · hover reveals color
+              </span>
             </span>
           }
         />

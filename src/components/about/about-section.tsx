@@ -101,14 +101,16 @@ export function AboutSection() {
               alt={`${identity.name}, portrait`}
               fill
               sizes="(min-width: 1024px) 33vw, 100vw"
-              className="object-cover grayscale transition-[filter] duration-500 ease-out group-hover:grayscale-0 motion-reduce:transition-none"
+              className="object-cover grayscale transition-[filter] duration-500 ease-out group-hover:grayscale-0 pointer-coarse:grayscale-0 motion-reduce:transition-none"
             />
             <figcaption className="absolute top-3 left-3 bg-ink px-2 py-1 font-mono text-[10px] tracking-[0.2em] text-bg">
               fig.02 / portrait
             </figcaption>
+            {/* Hover doesn't exist on touch — the portrait renders in color
+                there instead, and this hint disappears. */}
             <span
               aria-hidden="true"
-              className="absolute right-3 bottom-3 bg-ink px-2 py-1 font-mono text-[10px] tracking-[0.2em] text-bg"
+              className="absolute right-3 bottom-3 bg-ink px-2 py-1 font-mono text-[10px] tracking-[0.2em] text-bg pointer-coarse:hidden"
             >
               hover → color
             </span>
