@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { JetBrains_Mono } from "next/font/google";
 import localFont from "next/font/local";
 import { InkTrail } from "@/components/common/ink-trail";
@@ -29,9 +29,48 @@ const jetbrainsMono = JetBrains_Mono({
   display: "swap",
 });
 
+const siteTitle =
+  "Ziedrick Ruen Giron — Senior UX Designer + Front-End Engineer";
+const siteDescription =
+  "Senior UX designer and front-end engineer with 17 years across fintech, blockchain, gaming, e-commerce, and media — design systems to shipped code. Manila, Philippines.";
+
 export const metadata: Metadata = {
-  title: "Ziedrick Ruen Giron",
-  description: "Senior UX designer + front-end engineer. 17 years, Manila.",
+  metadataBase: new URL("https://zngiron.com"),
+  title: siteTitle,
+  description: siteDescription,
+  alternates: { canonical: "/" },
+  openGraph: {
+    type: "website",
+    url: "/",
+    siteName: "zngiron.com",
+    locale: "en_US",
+    title: siteTitle,
+    description: siteDescription,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: siteTitle,
+    description: siteDescription,
+  },
+  robots: { index: true, follow: true },
+  authors: [{ name: "Ziedrick Ruen Giron", url: "https://zngiron.com" }],
+  creator: "Ziedrick Ruen Giron",
+  keywords: [
+    "UX designer",
+    "front-end engineer",
+    "design systems",
+    "React",
+    "Next.js",
+    "Manila",
+    "portfolio",
+  ],
+};
+
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#f4f3ef" },
+    { media: "(prefers-color-scheme: dark)", color: "#0c0c0d" },
+  ],
 };
 
 export default function RootLayout({

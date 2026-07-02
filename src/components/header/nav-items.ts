@@ -26,7 +26,7 @@ export type ConnectItem = {
   kind: "external" | "download";
 };
 
-// TODO(zuen): confirm real handles/URLs before ship.
+// Handles/URLs from Obsidian `Portfolio/07 - Contact` (source of truth).
 export const connectItems: ConnectItem[] = [
   {
     id: "github",
@@ -43,7 +43,7 @@ export const connectItems: ConnectItem[] = [
   {
     id: "email",
     label: "Email",
-    href: "mailto:hello@zngiron.com",
+    href: "mailto:zngiron@gmail.com",
     kind: "external",
   },
   { id: "cv", label: "Download CV", href: "/cv.pdf", kind: "download" },

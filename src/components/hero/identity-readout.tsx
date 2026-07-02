@@ -55,6 +55,21 @@ export function IdentityReadout({ ghost = false }: { ghost?: boolean }) {
         </div>
       </div>
 
+      {/* Availability — the 8-second recruiter skim: name, role, available,
+          CTA. Text stays mute; only the dot is red, painted by the ghost
+          layer (z-70) so it never inverts under the master trail. */}
+      <p className={`mt-8 flex items-baseline gap-2 font-mono text-sm ${mute}`}>
+        <span
+          aria-hidden="true"
+          className={`size-1.5 translate-y-px self-center rounded-full ${
+            ghost
+              ? "bg-accent animate-blink motion-reduce:animate-none"
+              : "bg-transparent"
+          }`}
+        />
+        [ available for select work ]
+      </p>
+
       <div className="mt-8">
         {ghost ? (
           <span className="inline-flex items-baseline gap-1 rounded-full px-5 py-3 text-sm font-medium">

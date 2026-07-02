@@ -86,6 +86,53 @@ Monochrome chrome, color from the work. Tokens live in `@theme` in `src/app/glob
 - **Red never inverts:** every red `_` is branding and must stay red under the trail. Difference-blend turns accent red cyan, so protected glyphs use pixel-identical **ghost overlays at `z-70`** (above the trail): the hero identity ghost (`page.tsx`) and the header logo-underscore ghost (`header.tsx`, real `_` inherits the pill color while closed). Any new red glyph must either sit above `z-60` or get a ghost.
 - **Reduced motion is non-negotiable:** every animated component honors `prefers-reduced-motion` (`useReducedMotion` or `motion-reduce:`) — opacity-only or instant, and `scroll-behavior: auto`.
 
+## Sections (002–006, shipped 2026-07-02)
+
+Shared shell: `border-t border-line`, gutters `px-6 sm:px-12`, `py-24 sm:py-32`
+(content-height, NOT forced `min-h-screen` — only the hero and 006 are
+viewport-scale). Every section opens with `SectionHeading`
+(`src/components/common/section-heading.tsx`): `00N_id` mono kicker + display
+title + right-aligned mono meta, ruled underneath. Scroll reveals via `Reveal`
+(`src/components/common/reveal.tsx`): fade + 8px rise, once, opacity-only under
+reduced motion. Content comes from typed modules in `src/data/` (transcribed
+from the Obsidian vault — CI can't read iCloud; Obsidian stays the human source
+of truth). **Do not put z-70 ghosts inside `Reveal`** — motion transforms
+create a stacking context that traps them below the trail.
+
+- **002_work** ("Where the color lives.") — native scroll-snap rail, 6 curated
+  cards + terminal end-card into 005. Shots rest `grayscale`, bloom on
+  hover/`:focus-visible`; on `(hover: none)` devices an IntersectionObserver
+  colors the card nearest viewport center. `05.NN` chip = the project's real
+  row in the 005 index. Rail is a focusable region with arrow-key scrolling.
+  Placeholder shots in `/public/work/` (from the mockup archive) until real
+  captures land.
+- **003_about** ("One person, one path.") — editorial statement (lead in ink,
+  detail in mute), stat block (years/employers/projects/disciplines, derived
+  from data), square portrait with grayscale→color hover + `fig.02` chip,
+  two numbered capability columns (no icon grids), education + languages as
+  `$` spec lines.
+- **004_experience** ("Seventeen years, eleven rooms.") — spec-table rows
+  deliberately art-directed away from bare read.cv rows: mono index + period
+  column, role-progression `→` arrows, red pulsing `[ current ]` marker,
+  meta right-aligned. Rows are not links: no pointer, no hover affordance.
+- **005_projects** ("Every project on record.") — the full index (n derived
+  from data), filterable by type via inline mono text filters (never pill
+  buttons); active filter carries an **ink** `_` cursor (red is capped at the
+  brand cursor + availability status). Rows link only when a live URL exists.
+- **006_contact** ("Fill in the blank_") — deliberately NOT the cloned
+  award-footer combo (magnetic pill + local time in a dark rounded panel).
+  Email is the display-type element (mailto + `[ copy ]` clipboard action),
+  red pulsing availability status, connect links, footer spec strip
+  (© · built-in-house colophon · coords · Manila clock · back-to-001). The red
+  heading `_` and status dot are painted by a z-70 ghost headline overlay
+  (same pattern as the hero) so they never invert.
+- **Global** — no persistent floating CTA pill (three contact paths already:
+  hero CTA, menu CONNECT, 006); hero readout instead carries a small
+  `[ available for select work ]` line whose red dot lives in the hero ghost.
+  SEO suite: spec-sheet OG card (`opengraph-image.tsx`, all JetBrains Mono —
+  satori can't load woff2), underscore-tile `icon.svg`, JSON-LD Person,
+  sitemap/robots, placeholder `/cv.pdf` generated from the data layer.
+
 ## Iconography
 
 - **Library: Phosphor** (`@phosphor-icons/react`), always `weight="thin"` to match the hairline/underscore aesthetic. Import icons directly (`import { EqualsIcon } from "@phosphor-icons/react"`); `next.config.ts` `optimizePackageImports` tree-shakes to only what's used. Icons inherit `currentColor`, so color them with `text-*` token utilities on the parent. In Server Components import from `@phosphor-icons/react/ssr`.
@@ -136,3 +183,8 @@ Monochrome chrome, color from the work. Tokens live in `@theme` in `src/app/glob
 | 2026-07-02 | Hero CTA switched from constant `bg-panel` to inverted chrome (`bg-ink`/`text-bg`) | Panel (`#111113`) was near-invisible against the dark page bg (`#0c0c0d`) — the CTA didn't react to theme. Ink/bg flips with the theme; the type-cursor `▋` stays. Panel token reserved, currently unused. |
 | 2026-07-02 | Theme switcher = standalone upper-right spec-chip (icon + visible `T` hint) + bare `T` shortcut; removed from the pill | Reachable without the menu and without the mouse; the visible kbd hint teaches the shortcut; keyboard toggles originate the circular reveal from the button. Bare key guarded against modifiers and form fields. |
 | 2026-07-02 | Ink-trail timing: grow `0.6s`, retract `2.6s` after `300ms` idle; trail hides while the menu is open | Slower swell reads as ink, not a pop; longer retract retains the blot. Instant hide on menu open is masked by the 0.5s panel morph and guarantees the nav is never obscured. |
+| 2026-07-02 | Sections 002–006 shipped (see §Sections); content moved to typed `src/data/` modules transcribed from Obsidian | Vault is the human source of truth but CI can't read iCloud; typed modules keep counts/indices derived, never hand-numbered. |
+| 2026-07-02 | 002 = native scroll-snap rail (not a JS carousel), 6 featured + end-card; touch devices color the center card via IntersectionObserver | Native scroll keeps momentum/drag/swipe + a11y for free; hover-less devices must still see the signature or phones never get color. |
+| 2026-07-02 | 006 composition breaks the "Copy Dennis" footer (email as display element, no floating CTA pill); persistent-CTA global chrome idea retired | Research: magnetic pill + local-time dark footer is the most-cloned combo on awwwards; hero CTA + menu CONNECT + 006 already give three contact paths. Hero readout gains the `[ available ]` line for the 8-second skim. |
+| 2026-07-02 | Red stays capped at brand `_` + availability status; interactive-state underscores (filters, labels) are ink | Un-ghosted red flips cyan under the trail exactly where the pointer is; ghosts protect only fixed/hero/finale brand glyphs. Mid-page status dots (`[ current ]`) accept transient inversion — they're status, not the mark. |
+| 2026-07-02 | OG card all-JetBrains-Mono, generated in-system via `ImageResponse` | satori can't consume the General Sans woff2; the all-mono card reads as the site's spec chrome anyway. Fonts fetched (ttf) at build only. |

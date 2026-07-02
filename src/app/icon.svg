@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- The mark is the underscore: inverted-chrome tile, red _ (DESIGN.md §Identity). -->
+  <rect width="64" height="64" rx="14" fill="#111113"/>
+  <rect x="14" y="44" width="36" height="7" rx="2" fill="#e4322b"/>
+</svg>

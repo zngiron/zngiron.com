@@ -1,6 +1,11 @@
+import { AboutSection } from "@/components/about/about-section";
 import { GridBackground } from "@/components/common/grid";
+import { ContactSection } from "@/components/contact/contact-section";
+import { ExperienceSection } from "@/components/experience/experience-section";
 import { IdentityReadout } from "@/components/hero/identity-readout";
 import { PortraitLineArt } from "@/components/hero/portrait-lineart";
+import { ProjectsSection } from "@/components/projects/projects-section";
+import { WorkSection } from "@/components/work/work-section";
 import { cn } from "@/lib/utils";
 
 // Hero (001_identity): breathing grid + identity readout. The single master ink
@@ -20,17 +25,40 @@ const columnTicks = Array.from({ length: 12 }, (_, i) => {
   return { n, visibility, key: `col-${n}` };
 });
 
-const sections = [
-  { id: "work", index: "002", label: "Selected Work" },
-  { id: "about", index: "003", label: "About" },
-  { id: "experience", index: "004", label: "Experience" },
-  { id: "projects", index: "005", label: "Project Index" },
-  { id: "contact", index: "006", label: "Contact" },
-];
+// Person schema — machine-readable identity for search and link unfurls.
+const personSchema = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: "Ziedrick Ruen Giron",
+  alternateName: "Zuen Giron",
+  jobTitle: "Senior UX Designer & Front-End Engineer",
+  url: "https://zngiron.com",
+  email: "mailto:zngiron@gmail.com",
+  address: {
+    "@type": "PostalAddress",
+    addressLocality: "Manila",
+    addressCountry: "PH",
+  },
+  sameAs: ["https://github.com/zngiron", "https://linkedin.com/in/zngiron"],
+  knowsAbout: [
+    "UX Design",
+    "Design Systems",
+    "Front-End Engineering",
+    "React",
+    "Next.js",
+    "TypeScript",
+    "Accessibility",
+  ],
+};
 
 export default function Home() {
   return (
     <main className="flex flex-1 flex-col">
+      <script
+        type="application/ld+json"
+        // biome-ignore lint/security/noDangerouslySetInnerHtml: static JSON-LD, no user input
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(personSchema) }}
+      />
       <section
         id="top"
         className="relative flex min-h-screen flex-col justify-between overflow-hidden bg-bg pt-28 pb-8"
@@ -91,20 +119,11 @@ export default function Home() {
         </div>
       </section>
 
-      {sections.map((section) => (
-        <section
-          key={section.id}
-          id={section.id}
-          className="flex min-h-screen flex-col justify-center border-line border-t px-6 sm:px-12"
-        >
-          <p className="font-mono text-xs tracking-wide text-mute">
-            {section.index}_{section.id}
-          </p>
-          <h2 className="mt-3 text-3xl font-medium tracking-tight text-mute sm:text-4xl">
-            {section.label}
-          </h2>
-        </section>
-      ))}
+      <WorkSection />
+      <AboutSection />
+      <ExperienceSection />
+      <ProjectsSection />
+      <ContactSection />
     </main>
   );
 }
