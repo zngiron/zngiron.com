@@ -110,6 +110,7 @@ export default function Home() {
             the otherwise-global inversion. */}
         <div
           aria-hidden="true"
+          data-red-ghost=""
           className="pointer-events-none absolute inset-x-0 bottom-8 z-70"
         >
           <div className={GRID}>

@@ -74,6 +74,7 @@ export function ContactSection() {
         {/* Ghost layer — paints only the red glyphs above the ink trail. */}
         <div
           aria-hidden="true"
+          data-red-ghost=""
           className="pointer-events-none absolute inset-x-0 top-24 z-70 px-6 sm:px-12"
         >
           <ContactHeadline ghost />

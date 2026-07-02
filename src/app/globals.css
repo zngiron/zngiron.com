@@ -88,13 +88,21 @@ html[data-menu-open] [data-ink-trail] {
 /* Logo-underscore ghost timing: it mirrors the COLLAPSED pill only, so hide it
    the instant the menu opens (the real _ stays red — the trail is hidden too),
    and bring it back only after the 0.5s close morph settles so it never floats
-   misaligned over the animating pill. */
-[data-logo-ghost] {
+   misaligned over the animating pill.
+
+   The same rule covers every red ghost overlay ([data-red-ghost]: hero
+   identity + contact headline): they sit at z-70 to clear the ink trail, which
+   also puts them above the open menu panel (z-50) — without this they float as
+   stray red glyphs over the menu and its backdrop. The trail is hidden while
+   the menu is open, so nothing needs ghost protection then. */
+[data-logo-ghost],
+[data-red-ghost] {
   visibility: visible;
   transition: visibility 0s 0.55s;
 }
 
-html[data-menu-open] [data-logo-ghost] {
+html[data-menu-open] [data-logo-ghost],
+html[data-menu-open] [data-red-ghost] {
   visibility: hidden;
   transition: visibility 0s;
 }
