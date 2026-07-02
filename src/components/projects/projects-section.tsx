@@ -20,9 +20,10 @@ export function ProjectsSection() {
         />
       </Reveal>
 
-      <Reveal className="mt-10">
+      {/* No Reveal on the 56-row index — same slab-curtain rationale as 004. */}
+      <div className="mt-10">
         <ProjectIndex />
-      </Reveal>
+      </div>
     </section>
   );
 }

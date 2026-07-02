@@ -23,7 +23,10 @@ export function ExperienceSection() {
         />
       </Reveal>
 
-      <Reveal className="mt-10">
+      {/* No Reveal on the table itself: an 11-row list fading in as one slab
+          reads as a curtain, not a reveal — and content shouldn't be gated on
+          JS. The heading carries the entrance. */}
+      <div className="mt-10">
         <ol>
           {employers.map((employer, i) => (
             <li
@@ -73,7 +76,7 @@ export function ExperienceSection() {
           independent brand, web, and product work runs alongside everything
           above · full record in [ 005 ]
         </p>
-      </Reveal>
+      </div>
     </section>
   );
 }
