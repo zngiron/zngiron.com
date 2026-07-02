@@ -43,8 +43,17 @@ export function WorkRail({ children }: { children: ReactNode }) {
     const rail = railRef.current;
     if (!rail) return;
     const card = rail.querySelector<HTMLElement>("[data-work-card]");
+    // 24 = the rail's gap-6; update together.
     const step = card ? card.offsetWidth + 24 : rail.clientWidth * 0.8;
-    rail.scrollBy({ left: step * direction, behavior: "smooth" });
+    // JS scrollBy ignores the CSS reduced-motion override, so gate it here
+    // (same pattern as the header's scrollToTop).
+    const reduce = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+    rail.scrollBy({
+      left: step * direction,
+      behavior: reduce ? "auto" : "smooth",
+    });
   };
 
   return (
