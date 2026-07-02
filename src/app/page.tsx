@@ -16,7 +16,8 @@ import { cn } from "@/lib/utils";
 // the master trail. The lone exception is the red _ ghost (z-70), lifted above the
 // trail so the brand red never inverts. Native cursor stays visible.
 
-const GRID = "grid grid-cols-2 gap-6 px-6 sm:grid-cols-4 lg:grid-cols-12";
+const GRID =
+  "grid grid-cols-2 gap-6 px-6 sm:grid-cols-4 sm:px-12 lg:grid-cols-12";
 const CONTENT_COL = "col-span-2 sm:col-span-4 lg:col-span-6 lg:col-start-7";
 
 const columnTicks = Array.from({ length: 12 }, (_, i) => {
@@ -78,8 +79,8 @@ export default function Home() {
 
         {/* Top spec row: label + column ruler. z-10 → inverts under the trail. */}
         <div className="relative z-10">
-          <p className="px-6 font-mono text-xs tracking-wide text-mute">
-            001 Identity
+          <p className="px-6 font-mono text-xs tracking-wide text-mute sm:px-12">
+            001_identity
           </p>
           <div className={cn(GRID, "mt-4")}>
             {columnTicks.map((tick) => (

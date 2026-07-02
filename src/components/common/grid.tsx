@@ -8,9 +8,11 @@ const TOTAL_COLUMNS = 12;
 const GLOW_RADIUS = 200;
 
 // Shared responsive column grid — 2 cols mobile, 4 at sm, 12 at lg.
+// Gutters match the sections (px-6 sm:px-12) so the backdrop columns align
+// with every section's content edge, not just the hero's.
 export const gridColumns = cn(
   "grid grid-cols-2 gap-6 px-6",
-  "sm:grid-cols-4",
+  "sm:grid-cols-4 sm:px-12",
   "lg:grid-cols-12",
 );
 
